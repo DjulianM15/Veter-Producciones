@@ -24,29 +24,17 @@
                     aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-    
             <div class="collapse navbar-collapse" id="navbar-star">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'nosotros' %}">Nosotros</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'catalogo' %}">Accesorios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'formulario' %}">Formulario</a>
-                    </li>
-                    <!-- Agregar el ícono del carrito aquí -->
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'nosotros' %}">Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'catalogo' %}">Accesorios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'formulario' %}">Formulario</a></li>
                     <li class="nav-item">
                         <a class="nav-link position-relative" href="{% url 'ver_carrito' %}">
                             <i class="fas fa-shopping-cart"></i>
                             {% if request.user.is_authenticated %}
-                                <span class="badge bg-danger">
-                                    {{ request.user.carritoitem_set.count|default:"0" }}
-                                </span>
+                                <span class="badge bg-danger">{{ request.user.carritoitem_set.count|default:"0" }}</span>
                             {% endif %}
                         </a>
                     </li>
@@ -70,7 +58,6 @@
                             {% endif %}
                         </ul>
                     </li>
-                    <!-- Manual de Usuario con ícono -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% static 'docs/Manual _de_usuario.pdf' %}" target="_blank">
                             <i class="fas fa-book"></i> Manual
@@ -85,80 +72,35 @@
 
 </main>
 {% endblock %}
-<footer class="bg-dark text-white pt-5 pb-4">
+<footer class="bg-dark text-white text-center py-4">
     <div class="container">
         <div class="row">
-            <!-- Columna 1: Descripción -->
-            <div class="col-md-4 mb-4">
-                <h5 class="text-uppercase mb-3">Veter Producciones</h5>
-                <p class="text-white-50">
-                    Proporcionamos soluciones profesionales en sonido e iluminación para tus eventos. ¡Haz que cada momento sea inolvidable!
-                </p>
-                <p class="text-white-50">
-                    Más de 10 años de experiencia en el sector del entretenimiento.
-                </p>
+            <div class="col-md-4">
+                <h5>Veter Producciones</h5>
+                <p class="text-white-50">Proporcionamos soluciones profesionales en sonido e iluminación para tus eventos.</p>
             </div>
-
-            <!-- Columna 2: Contacto -->
-            <div class="col-md-4 mb-4">
-                <h5 class="text-uppercase mb-3">Contáctenos</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-3">
-                        <i class="bi bi-geo-alt-fill me-2"></i>Garzón-Huila, Colombia
-                    </li>
-                    <li class="mb-3">
-                        <i class="bi bi-envelope-fill me-2"></i>
-                        <a href="mailto:munozjulian146@gmail.com" class="text-white-50 text-decoration-none">munozjulian146@gmail.com</a>
-                    </li>
-                    <li class="mb-3">
-                        <i class="bi bi-telephone-fill me-2"></i>
-                        <a href="tel:+573214508096" class="text-white-50 text-decoration-none">+57 321 450 8096</a>
-                    </li>
-                </ul>
+            <div class="col-md-4">
+                <h5>Contáctenos</h5>
+                <p class="text-white-50"><i class="bi bi-geo-alt-fill"></i> Garzón-Huila, Colombia</p>
+                <p class="text-white-50"><i class="bi bi-envelope-fill"></i> <a href="mailto:munozjulian146@gmail.com" class="text-white-50">munozjulian146@gmail.com</a></p>
+                <p class="text-white-50"><i class="bi bi-telephone-fill"></i> <a href="tel:+573214508096" class="text-white-50">+57 321 450 8096</a></p>
             </div>
-
-            <!-- Columna 3: Redes Sociales -->
-            <div class="col-md-4 mb-4">
-                <h5 class="text-uppercase mb-3">Síguenos</h5>
-                <div class="social-media-container">
-                    <a href="https://facebook.com/veterproducciones" class="social-link" target="_blank">
-                        <div class="social-icon-wrapper facebook">
-                            <img src="{% static 'imagenes/facebook.png' %}" alt="Facebook" class="social-icon" width="40" height="40">
-                        </div>
-                    </a>
-                    <a href="https://instagram.com/veterproducciones" class="social-link" target="_blank">
-                        <div class="social-icon-wrapper instagram">
-                            <img src="{% static 'imagenes/instagram.png' %}" alt="Instagram" class="social-icon" width="40" height="40">
-                        </div>
-                    </a>
-                    <a href="https://wa.me/573214508096" class="social-link" target="_blank">
-                        <div class="social-icon-wrapper whatsapp">
-                            <img src="{% static 'imagenes/whatsapp.png' %}" alt="WhatsApp" class="social-icon" width="40" height="40">
-                        </div>
-                    </a>
-                </div>
-                <div class="mt-4">
-                    <h6 class="text-uppercase mb-3 fw-bold">Horario de Atención</h6>
-                    <p class="text-white-50 mb-1">Lunes a Sábado: 7:00 AM - 10:00 PM</p>
-                    <p class="text-white-50">Domingo: 10:00 AM - 6:00 PM</p>
-                </div>
+            <div class="col-md-4">
+                <h5>Síguenos</h5>
+                <a href="https://facebook.com/veterproducciones" class="text-white me-2"><i class="fab fa-facebook fa-lg"></i></a>
+                <a href="https://instagram.com/veterproducciones" class="text-white me-2"><i class="fab fa-instagram fa-lg"></i></a>
+                <a href="https://wa.me/573214508096" class="text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
             </div>
         </div>
-
-        <!-- Línea divisoria y derechos de autor -->
-        <div class="text-center mt-4 border-top pt-3">
-            <p class="mb-0 text-white-50">&copy; 2025 Veter Producciones. Todos los derechos reservados.</p>
-        </div>
+        <hr class="my-3">
+        <p class="text-white-50 mb-0">&copy; 2025 Veter Producciones. Todos los derechos reservados.</p>
     </div>
 </footer>
 
-<!-- Botón de WhatsApp -->
 <a href="https://wa.me/573214508096" class="whatsapp-float" target="_blank">
-    <img src="{% static 'imagenes/social.png' %}" alt="WhatsApp">
+    <img src="{% static 'imagenes/social.png' %}" alt="WhatsApp" width="50" height="50">
 </a>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
