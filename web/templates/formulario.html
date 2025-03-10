@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Formulario de Contacto{% endblock %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'formulario.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6" data-aos="fade-up">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="contact-icon mb-3" data-aos="zoom-in">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h2 class="h4 mb-2" data-aos="fade-up">Contáctanos</h2>
+                        <p class="text-muted small" data-aos="fade-up" data-aos-delay="100">Estamos aquí para ayudarte</p>
+                    </div>
+
+                    <form method="POST" class="needs-validation animate__animated animate__fadeIn" novalidate>
+                        {% csrf_token %}
+                        <div class="form-floating mb-3" data-aos="fade-up" data-aos-delay="200">
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            <label for="nombre">Nombre</label>
+                        </div>
+
+                        <div class="form-floating mb-3" data-aos="fade-up" data-aos-delay="300">
+                            <input type="email" class="form-control" id="email" name="email" required>
+                            <label for="email">Email</label>
+                        </div>
+
+                        <div class="form-floating mb-3" data-aos="fade-up" data-aos-delay="400">
+                            <textarea class="form-control" id="mensaje" name="mensaje" style="height: 100px" required></textarea>
+                            <label for="mensaje">Mensaje</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2" data-aos="fade-up" data-aos-delay="500">
+                            <i class="fas fa-paper-plane me-2"></i>Enviar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 1000,
+        easing: 'ease-in-out',
+        once: true,
+        mirror: false
+    });
+</script>
+{% endblock %}

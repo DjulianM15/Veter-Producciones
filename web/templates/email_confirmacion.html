@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+
+<div style="max-width: 600px; margin: 0 auto; font-family: Arial, Helvetica, sans-serif; color: #333; border: 1px solid #ddd; border-radius: 5px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <!-- Encabezado -->
+    <div style="background-color: #6e8ffbc0; color: white; padding: 20px; text-align: center;">
+        <h1 style="margin: 0; font-size: 24px;">¡Gracias por tu compra, {{ orden.nombre }}!</h1>
+    </div>
+
+    <!-- Contenido -->
+    <div style="padding: 20px; background-color: #f9f9f9;">
+        <p style="font-size: 16px; line-height: 1.5; margin-bottom: 20px;">Tu pedido ha sido procesado con éxito. Aquí están los detalles:</p>
+
+        <!-- Detalles del pedido -->
+        <div style="background-color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #4CAF50;">
+            <h2 style="color: #a877e38b; margin-top: 0; font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Detalles del Pedido</h2>
+            <p style="margin: 8px 0; font-size: 15px;"><strong>Número de Pedido:</strong> {{ orden.id }}</p>
+            <p style="margin: 8px 0; font-size: 15px;"><strong>Total:</strong> ${{ orden.total }}</p>
+            <p style="margin: 8px 0; font-size: 15px;"><strong>Método de Pago:</strong> {{ orden.get_metodo_pago_display }}</p>
+        </div>
+
+        <!-- Instrucciones de pago -->
+        <div style="background-color: white; padding: 15px; border-radius: 5px; border-left: 4px solid #2196F3;">
+            <h2 style="color: #6e8ffbc0; margin-top: 0; font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Instrucciones de Pago</h2>
+            <p style="margin: 8px 0; font-size: 15px;">Para completar tu pago, por favor realiza la transferencia a la siguiente cuenta:</p>
+            <ul style="padding-left: 20px; margin: 15px 0;">
+                <li style="margin-bottom: 8px; font-size: 15px;"><strong style="color: #2196F3;">Nequi:</strong> 3222332903</li>
+                <li style="margin-bottom: 8px; font-size: 15px;"><strong style="color: #2196F3;">Bancolombia:</strong> 987654321</li>
+            </ul>
+            <p style="margin: 8px 0; font-size: 15px;">Una vez realizado el pago, por favor envía el comprobante a nuestro correo electrónico.</p>
+        </div>
+    </div>
+
+</body>
+</html>

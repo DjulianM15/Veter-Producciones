@@ -1,0 +1,13 @@
+<!-- Reemplazar el enlace de logout actual por este formulario -->
+{% if user.is_authenticated %}
+    <li><a class="dropdown-item" href="#">Hola {{ user.username }}</a></li>
+    <li>
+        <form method="post" action="{% url 'logout' %}" class="dropdown-item">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-link p-0">Cerrar sesión</button>
+        </form>
+    </li>
+{% else %}
+    <li><a class="dropdown-item" href="{% url 'login' %}">Iniciar sesión</a></li>
+    <li><a class="dropdown-item" href="{% url 'register' %}">Registrarse</a></li>
+{% endif %}

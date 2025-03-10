@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Recuperar Contraseña{% endblock %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'recuperarc.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+
+<main>
+    <div class="recovery-container" data-aos="fade-up">
+        <form method="POST" class="glass-form">
+            {% csrf_token %}
+            <div class="form-content">
+                <div class="form-icon" data-aos="zoom-in">
+                    <i class="fas fa-lock"></i>
+                </div>
+                
+                <h2 data-aos="fade-up">Ingresa tu nueva contraseña</h2>
+
+                {% if messages %}
+                    <div class="messages" data-aos="fade-up">
+                    {% for message in messages %}
+                        <div class="{{ message.tags }}">
+                            {{ message }}
+                            <button type="button" class="close-btn" data-bs-dismiss="alert">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="form-group" data-aos="fade-up" data-aos-delay="200">
+                    <div class="input-group">
+                        <i class="fas fa-key input-icon"></i>
+                        <input type="password" name="password" placeholder="Nueva contraseña" required>
+                    </div>
+                </div>
+
+                <button type="submit" data-aos="fade-up" data-aos-delay="300">
+                    <i class="fas fa-save me-2"></i>Guardar
+                </button>
+
+                <div class="links" data-aos="fade-up" data-aos-delay="400">
+                    <a href="{% url 'login' %}" class="back-link">
+                        <i class="fas fa-arrow-left me-2"></i>Volver al inicio de sesión
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 1000,
+        easing: 'ease-in-out',
+        once: true,
+        mirror: false
+    });
+</script>
+{% endblock %}

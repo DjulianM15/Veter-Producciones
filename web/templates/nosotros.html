@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% block title %}Nosotros - Veter Producciones{% endblock %}
+{% load static %}
+
+{% block content %}
+<!-- Enlaces CSS -->
+<link rel="stylesheet" href="{% static 'nosotros.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+
+<!-- Header -->
+<header class="text-white text-center py-5 parallax" data-speed="0.5">
+    <div class="container">
+        <h1 class="animate__animated animate__fadeIn">Veter Producciones</h1>
+        <p class="lead animate__animated animate__fadeIn animate__delay-1s">
+            Creando experiencias únicas a través del sonido y la iluminación
+        </p>
+    </div>
+</header>
+
+<!-- Misión y Visión -->
+<section class="mission-vision py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-right">
+                <div class="card">
+                    <h2>Misión</h2>
+                    <p>Nuestra misión es proporcionar sonido e iluminación profesional, creando experiencias inolvidables en cada evento.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-left">
+                <div class="card">
+                    <h2>Visión</h2>
+                    <p>Nuestra visión es ser líderes en la industria, conocidos por nuestra innovación y excelencia en cada servicio que ofrecemos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Galería de Fotos -->
+<section class="gallery-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-5" data-aos="fade-up">Galería de Fotos</h2>
+        <div class="gallery">
+            <div class="card" data-aos="fade-up">
+                <img src="{% static 'imagenes/Eventos/IMG_20240531_193319.jpg' %}" alt="Evento Social">
+                <div class="card__content">
+                    <p class="card__title">Evento Social</p>
+                    <p class="card__description">FundaCoofisam</p>
+                </div>
+            </div>
+            <div class="card" data-aos="fade-up">
+                <img src="{% static 'imagenes/Eventos/IMG_20240608_225011.jpg' %}" alt="15 Años">
+                <div class="card__content">
+                    <p class="card__title">15 Años #1</p>
+                    <p class="card__description">Celebración de 15 años</p>
+                </div>
+            </div>
+            <div class="card" data-aos="fade-up">
+                <img src="{% static 'imagenes/Eventos/IMG_20240621_185451.jpg' %}" alt="Evento CeSalud">
+                <div class="card__content">
+                    <p class="card__title">Evento</p>
+                    <p class="card__description">CeSalud</p>
+                </div>
+            </div>
+            <div class="card" data-aos="fade-up">
+                <img src="{% static 'imagenes/Eventos/IMG_20240907_230216.jpg' %}" alt="15 Años">
+                <div class="card__content">
+                    <p class="card__title">15 Años #2</p>
+                    <p class="card__description">Celebración de 15 años</p>
+                </div>
+            </div>
+            <div class="card" data-aos="fade-up">
+                <img src="{% static 'imagenes/Eventos/IMG_20240622_211451.jpg' %}" alt="15 Años">
+                <div class="card__content">
+                    <p class="card__title">15 Años #3</p>
+                    <p class="card__description">Celebración de 15 años</p>
+                </div>
+            </div>
+            <div class="card" data-aos="fade-up">
+                <img src="{% static 'imagenes/Eventos/IMG_20240622_220231.jpg' %}" alt="15 Años">
+                <div class="card__content">
+                    <p class="card__title">15 Años #4</p>
+                    <p class="card__description">Celebración de 15 años</p>
+                </div>
+            </div>
+            <div class="card" data-aos="fade-up">
+                <img src="{% static 'imagenes/Eventos/IMG_20240823_191107.jpg' %}" alt="Cumpleaños">
+                <div class="card__content">
+                    <p class="card__title">Cumpleaños</p>
+                    <p class="card__description">Celebración de cumpleaños</p>
+                </div>
+            </div>
+            <div class="card" data-aos="fade-up">
+                <img src="{% static 'imagenes/Eventos/IMG_20240907_230440.jpg' %}" alt="15 Años">
+                <div class="card__content">
+                    <p class="card__title">15 Años #5</p>
+                    <p class="card__description">Celebración de 15 años</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Videos -->
+<section class="videos-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-5" data-aos="fade-up">Nuestros Videos</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4" data-aos="fade-up">
+                <div class="video-container">
+                    <iframe src="{% static 'videos/VID_20240929_000901.mp4' %}" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4" data-aos="fade-up">
+                <div class="video-container">
+                    <iframe src="{% static 'videos/VID_20241128_182447.mp4' %}" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4" data-aos="fade-up">
+                <div class="video-container">
+                    <iframe src="{% static 'videos/VID_20241130_221419.mp4' %}" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4" data-aos="fade-up">
+                <div class="video-container">
+                    <iframe src="{% static 'videos/VID_20241201_020508.mp4' %}" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4" data-aos="fade-up">
+                <div class="video-container">
+                    <iframe src="{% static 'videos/VID_20241214_212628.mp4' %}" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4" data-aos="fade-up">
+                <div class="video-container">
+                    <iframe src="{% static 'videos/VID_20241229_235242.mp4' %}" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonios -->
+<section class="testimonials py-5">
+    <div class="container">
+        <h2 class="text-center mb-5" data-aos="fade-up">Lo que dicen nuestros clientes</h2>
+        <div class="row justify-content-center">
+            <!-- Testimonio 1 -->
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"¡Increíble servicio! La iluminación transformó completamente nuestro evento."</p>
+                        <small>- María González, Fiesta de 15 años</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonio 2 -->
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"El sonido fue excelente, muy profesionales y puntuales. ¡Superó nuestras expectativas!"</p>
+                        <small>- Juan Pérez, Evento Empresarial</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonio 3 -->
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"La mejor decisión para nuestra boda. El ambiente que crearon fue mágico."</p>
+                        <small>- Ana Martínez, Boda</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Ubicación -->
+<section class="location-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-5" data-aos="fade-up">Encuéntranos Aquí</h2>
+        <div class="row justify-content-center">
+            <div class="col-12" data-aos="fade-up">
+                <div class="map-container">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!4v1740672925673!6m8!1m7!1sb7MKIQjFMX2y-pDyndq77A!2m2!1d2.185649771745431!2d-75.61910284011203!3f70.63156191474704!4f-6.568726339714502!5f2.0088320208098693" 
+                        width="100%" 
+                        height="450" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Scripts -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<!-- Script de animaciones -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar AOS
+    AOS.init({
+        duration: 1200,
+        easing: 'ease-in-out',
+        once: true,
+        mirror: false
+    });
+
+    // Registrar el plugin ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Timeline principal
+    const tl = gsap.timeline();
+
+    // Animación del header
+    tl.from('header h1', {
+        y: -100,
+        opacity: 0,
+        duration: 1.5,
+        ease: 'power4.out'
+    }).from('header p', {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out'
+    }, '-=1');
+
+    // Animaciones con ScrollTrigger
+    gsap.utils.toArray('section').forEach(section => {
+        gsap.from(section, {
+            scrollTrigger: {
+                trigger: section,
+                start: 'top center+=100',
+                toggleActions: 'play none none reverse'
+            },
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            ease: 'power3.out'
+        });
+    });
+
+    // Efecto parallax
+    const parallaxElements = document.querySelectorAll('.parallax');
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        parallaxElements.forEach(el => {
+            const speed = el.dataset.speed || 0.5;
+            el.style.transform = `translateY(${scrolled * speed}px)`;
+        });
+    });
+});
+</script>
+
+{% endblock %}

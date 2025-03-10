@@ -1,0 +1,326 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pedido Confirmado{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'confirmacion.css' %}">
+<div class="confirmacion-container">
+    <div class="confirmacion-icon">✅</div>
+    <h1 class="confirmacion-titulo">¡Pedido Confirmado!</h1>
+
+    <div class="confirmacion-mensaje">
+        Gracias por tu compra. Hemos recibido tu pedido y te hemos enviado un 
+        correo electrónico con los detalles de confirmación.
+    </div>
+
+    {% if orden %}
+    <div class="confirmacion-detalles">
+        <h2 class="resumen-titulo">Detalles del Pedido #{{ orden.id }}</h2>
+
+        <div class="confirmacion-datos">
+            <div>
+                <div class="datos-titulo">Nombre:</div>
+                <div>{{ orden.nombre }}</div>
+            </div>
+            <div>
+                <div class="datos-titulo">Email:</div>
+                <div>{{ orden.email }}</div>
+            </div>
+            <div>
+                <div class="datos-titulo">Teléfono:</div>
+                <div>{{ orden.telefono }}</div>
+            </div>
+            <div>
+                <div class="datos-titulo">Fecha:</div>
+                <div>{{ orden.fecha_creacion|date:"d/m/Y H:i" }}</div>
+            </div>
+            <div>
+                <div class="datos-titulo">Método de Pago:</div>
+                <div>{{ orden.get_metodo_pago_display }}</div>
+            </div>
+        </div>
+
+        <div class="confirmacion-items">
+            <div class="datos-titulo">Productos:</div>
+            {% for item in items %}
+            <div class="confirmacion-item">
+                <div>{{ item.cantidad }} x {{ item.catalogo.nombre }}</div>
+                <div>${{ item.subtotal }}</div>
+            </div>
+            {% endfor %}
+
+            <div class="confirmacion-total">
+                Total: ${{ orden.total }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="confirmacion-acciones">
+        <a href="{% url 'catalogo' %}" class="btn btn-success">
+            Continuar Comprando
+        </a>
+    </div>
+</div>
+
+<script>
+    /**
+ * Confirmación de Pedido - Animaciones JavaScript
+ * Añade efectos visuales interactivos a la página de confirmación
+ */
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Crear efecto de confeti al cargar la página
+    createConfetti();
+    
+    // Animar los elementos de la página secuencialmente
+    animateElements();
+    
+    // Añadir efectos de hover a los items
+    setupItemHoverEffects();
+    
+    // Añadir efecto de ondulación al botón
+    setupButtonRippleEffect();
+});
+
+/**
+ * Crea el efecto de confeti que cae desde la parte superior de la pantalla
+ */
+function createConfetti() {
+    const confettiCount = 100;
+    const container = document.querySelector('body');
+    
+    for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        
+        // Posición aleatoria
+        confetti.style.left = Math.random() * 100 + 'vw';
+        
+        // Tamaño aleatorio
+        const size = Math.random() * 10 + 5;
+        confetti.style.width = size + 'px';
+        confetti.style.height = size + 'px';
+        
+        // Retraso aleatorio
+        confetti.style.animationDelay = Math.random() * 5 + 's';
+        
+        // Duración aleatoria
+        confetti.style.animationDuration = Math.random() * 3 + 3 + 's';
+        
+        // Rotación aleatoria
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        
+        // Forma aleatoria (cuadrado o círculo)
+        if (Math.random() > 0.5) {
+            confetti.style.borderRadius = '50%';
+        }
+        
+        container.appendChild(confetti);
+        
+        // Eliminar el confeti después de la animación
+        setTimeout(() => {
+            confetti.remove();
+        }, 8000);
+    }
+}
+
+/**
+ * Anima los elementos de la página secuencialmente
+ */
+function animateElements() {
+    // Obtener todos los elementos animables
+    const elements = [
+        document.querySelector('.confirmacion-icon'),
+        document.querySelector('.confirmacion-titulo'),
+        document.querySelector('.confirmacion-mensaje'),
+        document.querySelector('.confirmacion-detalles'),
+        document.querySelector('.confirmacion-items'),
+        document.querySelector('.confirmacion-acciones')
+    ];
+    
+    // Añadir clase para iniciar animación con retraso
+    elements.forEach((element, index) => {
+        if (element) {
+            setTimeout(() => {
+                element.classList.add('animated');
+            }, index * 200);
+        }
+    });
+    
+    // Animar los datos del cliente con un efecto cascada
+    const datosCliente = document.querySelectorAll('.confirmacion-datos > div');
+    datosCliente.forEach((dato, index) => {
+        if (dato) {
+            setTimeout(() => {
+                dato.style.opacity = '1';
+                dato.style.transform = 'translateY(0)';
+            }, 1000 + (index * 100));
+        }
+    });
+}
+
+/**
+ * Configura efectos de hover para los items del pedido
+ */
+function setupItemHoverEffects() {
+    const items = document.querySelectorAll('.confirmacion-item');
+    
+    items.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.transition = 'all 0.3s ease';
+            this.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+            this.style.transform = 'translateX(5px)';
+            this.style.paddingLeft = '10px';
+            this.style.borderRadius = '4px';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = 'transparent';
+            this.style.transform = 'translateX(0)';
+            this.style.paddingLeft = '0';
+        });
+    });
+    
+    // Efecto especial para el total
+    const total = document.querySelector('.confirmacion-total');
+    if (total) {
+        total.addEventListener('mouseenter', function() {
+            this.style.transition = 'all 0.3s ease';
+            this.style.transform = 'scale(1.05)';
+            this.style.color = '#388E3C';
+        });
+        
+        total.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+            this.style.color = 'var(--color-success)';
+        });
+    }
+}
+
+/**
+ * Configura el efecto de ondulación para los botones
+ */
+function setupButtonRippleEffect() {
+    const buttons = document.querySelectorAll('.btn');
+    
+    buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const x = e.clientX - e.target.getBoundingClientRect().left;
+            const y = e.clientY - e.target.getBoundingClientRect().top;
+            
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple-effect';
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+    
+    // Añadir efecto de rebote al botón de continuar comprando
+    const continuarBtn = document.querySelector('.btn-success');
+    if (continuarBtn) {
+        continuarBtn.addEventListener('mouseenter', function() {
+            this.style.animation = 'bounce 0.5s ease';
+        });
+        
+        continuarBtn.addEventListener('animationend', function() {
+            this.style.animation = '';
+        });
+    }
+}
+
+/**
+ * Añade un efecto de brillo al icono de confirmación cuando se hace clic
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    const icon = document.querySelector('.confirmacion-icon');
+    if (icon) {
+        icon.addEventListener('click', function() {
+            this.style.animation = 'none';
+            setTimeout(() => {
+                this.style.animation = 'glow 1s ease-in-out';
+            }, 10);
+            
+            // Crear más confeti al hacer clic en el icono
+            createConfetti();
+        });
+    }
+});
+
+/**
+ * Añade un efecto de desvanecimiento al desplazarse por la página
+ */
+window.addEventListener('scroll', function() {
+    const scrollPosition = window.scrollY;
+    const elements = document.querySelectorAll('.confirmacion-detalles, .confirmacion-items');
+    
+    elements.forEach(element => {
+        const elementPosition = element.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        
+        if (elementPosition < windowHeight * 0.8) {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+        }
+    });
+});
+
+/**
+ * Añade un efecto de contador para el total
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    const totalElement = document.querySelector('.confirmacion-total');
+    if (totalElement) {
+        const totalText = totalElement.textContent;
+        const totalValue = parseFloat(totalText.replace(/[^\d.-]/g, ''));
+        
+        if (!isNaN(totalValue)) {
+            totalElement.setAttribute('data-total', totalValue);
+            totalElement.textContent = 'Total: $0';
+            
+            setTimeout(() => {
+                animateTotal(totalElement, 0, totalValue, 1500);
+            }, 2000);
+        }
+    }
+});
+
+/**
+ * Anima el contador del total
+ */
+function animateTotal(element, start, end, duration) {
+    const startTime = performance.now();
+    
+    function updateTotal(currentTime) {
+        const elapsedTime = currentTime - startTime;
+        const progress = Math.min(elapsedTime / duration, 1);
+        const easeProgress = easeOutQuart(progress);
+        const currentValue = start + (end - start) * easeProgress;
+        
+        element.textContent = `Total: $${currentValue.toFixed(2)}`;
+        
+        if (progress < 1) {
+            requestAnimationFrame(updateTotal);
+        }
+    }
+    
+    requestAnimationFrame(updateTotal);
+}
+
+/**
+ * Función de aceleración para animaciones más naturales
+ */
+function easeOutQuart(x) {
+    return 1 - Math.pow(1 - x, 4);
+}
+
+</script>
+
+{% endblock %}

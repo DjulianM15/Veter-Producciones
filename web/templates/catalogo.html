@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block title %}Catálogo{% endblock %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'catalogo.css' %}">
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+
+<!-- CSRF Token -->
+{% csrf_token %}
+
+<!-- Header -->
+<div class="container-fluid py-5" style="background: linear-gradient(135deg, #5d82fbc0, #a877e3c0);">
+    <div class="container">
+        <h1 class="text-center mb-5 position-relative" data-aos="fade-down">
+            <span class="border-bottom border-3 border-primary pb-2">Nuestros Accesorios</span>
+        </h1>
+        
+        <div class="row g-4">
+            {% for catalogo_item in catalogos %}
+            <div class="col-lg-3 col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|stringformat:'d00' }}">
+                <div class="card product-card h-100 border-0 transform-hover">
+                    <div class="card-img-wrapper">
+                        <img src="{{ catalogo_item.foto.url }}" class="card-img-top" alt="{{ catalogo_item.nombre }}">
+                        <div class="overlay">
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal{{ catalogo_item.id }}">
+                                Ver Detalles
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body glass-effect">
+                        <h5 class="card-title text-center">{{ catalogo_item.nombre }}</h5>
+                        <p class="card-text text-muted">{{ catalogo_item.description }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="price-tag">${{ catalogo_item.precio }}</span>
+                            <button class="btn btn-outline-primary btn-sm add-to-cart" 
+                                    onclick="agregarAlCarrito('{{ catalogo_item.id }}')">
+                                <i class="fas fa-cart-plus me-1"></i>
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal para cada producto -->
+            <div class="modal fade" id="modal{{ catalogo_item.id }}" tabindex="-1">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ catalogo_item.nombre }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <img src="{{ catalogo_item.foto.url }}" class="img-fluid producto-imagen-grande" alt="{{ catalogo_item.nombre }}">
+                            <div class="mt-3">
+                                <p class="producto-descripcion">{{ catalogo_item.description }}</p>
+                                <p class="precio-modal">${{ catalogo_item.precio }}</p>
+                                <button class="btn btn-primary" onclick="agregarAlCarrito('{{ catalogo_item.id }}')">
+                                    <i class="fas fa-cart-plus me-1"></i>
+                                    Agregar al Carrito
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    AOS.init({
+        duration: 1000,
+        easing: 'ease-in-out',
+        once: true,
+        mirror: false
+    });
+
+    function agregarAlCarrito(catalogoId) {
+    // Agregar console.log para debugging
+    console.log('Agregando producto:', catalogoId);
+    
+    const formData = new FormData();
+    formData.append('catalogo_id', catalogoId);
+    formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+    fetch('/agregar-al-carrito/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        console.log('Respuesta del servidor:', response);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Datos recibidos:', data);
+        if (data.success) {
+            const cartBadge = document.querySelector('.badge');
+            if (cartBadge) {
+                cartBadge.textContent = data.cart_count;
+            }
+            
+            Swal.fire({
+                icon: 'success',
+                title: '¡Producto agregado!',
+                text: 'El producto se ha agregado al carrito',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Ha ocurrido un error al procesar la solicitud'
+        });
+    });
+}
+</script>
+{% endblock %}

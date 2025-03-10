@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Contraseña Cambiada{% endblock %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'cambiada.css' %}">
+
+<main>
+    <form>
+        <div>
+            <h2>¡Contraseña Cambiada!</h2>
+            <p>Tu contraseña ha sido actualizada exitosamente.</p>
+            <button onclick="window.location.href='{% url 'login' %}'" type="button">Iniciar Sesión</button>
+        </div>
+    </form>
+</main>
+
+{% endblock %}

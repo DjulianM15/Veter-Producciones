@@ -1,0 +1,361 @@
+/* Variables y configuración */
+:root {
+    --primary: #52525252;
+    --accent: #7663f1;
+    --gradient-1: #5d82fbc0;
+    --gradient-2: #a877e3c0;
+    --glass-effect: rgba(255, 255, 255, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --card-border: 1px solid rgba(255, 255, 255, 0.2);
+    --card-radius: 20px;
+}
+
+/* Animaciones Keyframes Mejorados */
+@keyframes floatAnimation {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-15px) rotate(2deg); }
+    75% { transform: translateY(-5px) rotate(-2deg); }
+}
+
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(118, 99, 241, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(118, 99, 241, 0.6); }
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmerEffect {
+    0% { transform: translateX(-100%) skewX(-15deg); }
+    100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes rotateInX {
+    from { transform: rotateX(-30deg); opacity: 0; }
+    to { transform: rotateX(0); opacity: 1; }
+}
+
+/* Estilos Generales */
+body {
+    background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+    background-size: 400% 400%;
+    animation: gradientFlow 15s ease infinite;
+    color: white;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Header Mejorado */
+header {
+    position: relative;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+    overflow: hidden;
+    padding: 8rem 0 8rem; /* Aumentado el padding superior de 6rem a 8rem */
+    margin-top: 2rem; /* Añadido margen superior */
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    animation: shimmerEffect 3s infinite;
+}
+
+header h1 {
+    font-size: 4.5rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 
+        0 2px 5px rgba(0,0,0,0.2),
+        0 5px 15px rgba(0,0,0,0.1);
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards 0.5s;
+    margin-top: 2rem; /* Añadido margen superior al título */
+}
+
+/* Sección Misión/Visión */
+.mission-vision {
+    padding: 4rem 0;
+}
+
+.mission-vision .card {
+    background: var(--glass-effect);
+    backdrop-filter: blur(10px);
+    border: var(--card-border);
+    border-radius: var(--card-radius);
+    padding: 2.5rem;
+    transition: var(--transition-bounce);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    height: 100%;
+}
+
+.mission-vision .card:hover {
+    transform: translateY(-15px) rotateX(10deg);
+    animation: glowPulse 2s infinite;
+}
+
+.mission-vision .card h2 {
+    color: #fff;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.mission-vision .card h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: var(--accent);
+    transition: var(--transition-smooth);
+}
+
+.mission-vision .card:hover h2::after {
+    width: 100px;
+}
+
+.mission-vision .card p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    opacity: 0.9;
+}
+
+/* Galería Mejorada */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.gallery .card {
+    position: relative;
+    height: 300px;
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transition: var(--transition-bounce);
+}
+
+.gallery .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(0,0,0,0.7)
+    );
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.gallery .card:hover::before {
+    opacity: 1;
+}
+
+.gallery .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-smooth);
+}
+
+.gallery .card:hover {
+    transform: scale(1.05) translateY(-10px);
+    box-shadow: 
+        0 15px 30px rgba(0,0,0,0.3),
+        0 5px 15px rgba(118, 99, 241, 0.3);
+}
+
+.gallery .card:hover img {
+    transform: scale(1.2);
+}
+
+.card__content {
+    position: absolute;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    padding: 2rem;
+    background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.9),
+        rgba(0,0,0,0.7)
+    );
+    transition: var(--transition-smooth);
+    color: white; /* Texto en blanco */
+    text-align: center; /* Centrar texto */
+}
+
+.card__content .card__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.card__content .card__description {
+    font-size: 1rem;
+    opacity: 0.9;
+    color: #f0f0f0;
+    margin: 0;
+}
+
+.card:hover .card__content {
+    bottom: 0;
+    transform: translateY(0);
+}
+
+/* Videos */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: var(--card-radius);
+    transition: var(--transition-bounce);
+}
+
+.video-container:hover {
+    transform: scale(1.02) translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Testimoniales */
+.testimonial-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: var(--card-radius);
+    padding: 2.5rem;
+    transition: var(--transition-bounce);
+    position: relative;
+    overflow: hidden;
+}
+
+.testimonial-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.2),
+        transparent
+    );
+    transition: var(--transition-smooth);
+}
+
+.testimonial-card:hover::before {
+    animation: shimmerEffect 2s infinite;
+}
+
+.testimonial-content {
+    position: relative;
+    z-index: 1;
+}
+
+.testimonial-content i {
+    font-size: 3rem;
+    color: var(--accent);
+    opacity: 0.5;
+    animation: floatAnimation 3s ease-in-out infinite;
+}
+
+/* Mapa */
+.map-container {
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    transition: var(--transition-bounce);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.map-container:hover {
+    transform: scale(1.02) rotateX(5deg);
+    box-shadow: 
+        0 20px 40px rgba(0,0,0,0.3),
+        0 15px 25px rgba(118, 99, 241, 0.2);
+}
+
+/* Efectos de Scroll */
+[data-aos] {
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+[data-aos].aos-animate {
+    opacity: 1;
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+    header h1 { font-size: 3.5rem; }
+    .gallery { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 7rem 0 7rem; /* Ajuste para móviles */
+    }
+    header h1 { font-size: 2.5rem; }
+    header h1 {
+        margin-top: 1.5rem; /* Ajuste para móviles */
+    }
+    .mission-vision .card { margin-bottom: 2rem; }
+    .gallery { grid-template-columns: 1fr; }
+    .video-container { margin-bottom: 1.5rem; }
+}
+
+@media (max-width: 480px) {
+    header h1 { font-size: 2rem; }
+    .mission-vision .card h2 { font-size: 2rem; }
+    .testimonial-card { padding: 1.5rem; }
+}

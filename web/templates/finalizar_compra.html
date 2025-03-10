@@ -1,0 +1,337 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Finalizar Compra{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'finalizar_c.css' %}">
+
+<div class="checkout-container">
+    <h1 class="checkout-titulo">Finalizar Compra</h1>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{message}}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="checkout-grid">
+        <div class="checkout-form">
+            <h2 class="resumen_titulo">Datos De Cantacto</h2>
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form.nombre.id_for_label }}">Nombre Completo</label>
+                    {{ form.nombre }}
+                    {% if form.nombre.errors %}
+                    <div class="form-error">{{ form.nombre.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Correo Electronico</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <div class="form-error">{{ form.email.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.telefono.id_for_label }}">Telefono</label>
+                    {{ form.telefono }}
+                    {% if form.telefono.errors %}
+                    <div class="form-error">{{ form.telefono.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <h2 class="resumen-titulo">Metodo de Pago</h2>
+                <div class="form-group">
+                    {% for radio in form.metodo_pago %}
+                    <div class="form-group">
+                        {{ radio.tag }} {{ radio.choice_label }}
+                    </div>
+                    {% endfor %}
+                    {% if form.metodo_pago.errors %}
+                    <div class="form-error">{{ form.metodo_pago.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    Confirmar pedido
+                </button>
+            </form>
+        </div>
+
+        <div class="checkout-resumen">
+            <h2 class="resumen-titulo">Resumen del Pedido</h2>
+
+            {% for item in carrito_items %}
+            <div class="resumen-item">
+                <div class="resumen-producto">
+                    <img src="{{ catalogo_item.foto.url }}" 
+                    alt="{{ item.producto.nombre }}" class="resumen-imagen">
+
+                    <div>   
+                        <div>{{ item.producto.nombre }}</div>
+                        <div>Cantidad {{ item.cantidad }}</div>
+                    </div>
+                </div>
+                <div>${{ item.subtotal }}</div>
+            </div>
+            {% endfor %}
+
+            <div class="resumen-total">
+                Total: ${{ total }}
+            </div>
+
+            <div class="margin-top: 2rem;">
+                <a href="{% url 'ver_carrito' %}" class="btn btn-outline">
+                    Volver al Carrito
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // Animaciones para el carrito de compras
+document.addEventListener('DOMContentLoaded', function() {
+    // Animación de entrada para el título
+    const title = document.querySelector('h2');
+    if (title) {
+        title.style.opacity = '0';
+        title.style.transform = 'translateY(-20px)';
+        
+        setTimeout(() => {
+            title.style.transition = 'all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+            title.style.opacity = '1';
+            title.style.transform = 'translateY(0)';
+        }, 300);
+    }
+    
+    // Animación para los mensajes de alerta
+    const messages = document.querySelectorAll('.alert');
+    messages.forEach((message, index) => {
+        message.style.opacity = '0';
+        message.style.transform = 'translateX(-20px)';
+        
+        setTimeout(() => {
+            message.style.transition = 'all 0.5s ease';
+            message.style.opacity = '1';
+            message.style.transform = 'translateX(0)';
+        }, 500 + (index * 150));
+    });
+    
+    // Animación para las filas de la tabla
+    const tableRows = document.querySelectorAll('tbody tr');
+    tableRows.forEach((row, index) => {
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            row.style.transition = 'all 0.4s ease-out';
+            row.style.opacity = '1';
+            row.style.transform = 'translateY(0)';
+        }, 800 + (index * 100));
+    });
+    
+    // Animación para los botones de acción
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach((button, index) => {
+        button.style.opacity = '0';
+        button.style.transform = 'scale(0.8)';
+        
+        setTimeout(() => {
+            button.style.transition = 'all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+            button.style.opacity = '1';
+            button.style.transform = 'scale(1)';
+        }, 1200 + (index * 100));
+        
+        // Efecto hover avanzado
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.05)';
+            this.style.boxShadow = '0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+            this.style.boxShadow = '';
+        });
+    });
+    
+    // Animación para las imágenes de productos
+    const productImages = document.querySelectorAll('.img-thumbnail');
+    productImages.forEach(img => {
+        // Efecto de zoom suave al hover
+        img.addEventListener('mouseenter', function() {
+            this.style.transition = 'all 0.3s ease';
+            this.style.transform = 'scale(1.8) rotate(5deg)';
+            this.style.zIndex = '10';
+            this.style.boxShadow = '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)';
+        });
+        
+        img.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1) rotate(0)';
+            this.style.zIndex = '1';
+            this.style.boxShadow = '';
+        });
+    });
+    
+    // Efecto de onda al hacer clic en los botones
+    document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple-effect');
+            
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${e.clientX - rect.left - size/2}px`;
+            ripple.style.top = `${e.clientY - rect.top - size/2}px`;
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+    
+    // Animación para los controles de cantidad
+    const quantityControls = document.querySelectorAll('.quantity-control');
+    quantityControls.forEach(control => {
+        control.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Efecto de pulso al hacer clic
+                this.classList.add('pulse-animation');
+                setTimeout(() => {
+                    this.classList.remove('pulse-animation');
+                }, 500);
+            });
+        });
+    });
+    
+    // Animación para el total
+    const totalRow = document.querySelector('tfoot tr');
+    if (totalRow) {
+        totalRow.style.opacity = '0';
+        totalRow.style.transform = 'scale(0.9)';
+        
+        setTimeout(() => {
+            totalRow.style.transition = 'all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+            totalRow.style.opacity = '1';
+            totalRow.style.transform = 'scale(1)';
+            
+            // Efecto de destello para el total
+            setTimeout(() => {
+                totalRow.style.transition = 'background-color 0.3s ease';
+                totalRow.style.backgroundColor = 'rgba(167, 119, 224, 0.2)';
+                
+                setTimeout(() => {
+                    totalRow.style.backgroundColor = '';
+                }, 500);
+            }, 600);
+        }, 1500);
+    }
+});
+
+// Función para animar la actualización de cantidad
+function actualizarCantidad(itemId, nuevaCantidad) {
+    // Obtener la fila del producto
+    const row = document.querySelector(`tr[data-item-id="${itemId}"]`);
+    
+    // Animar el cambio
+    if (row) {
+        // Efecto de flash en la fila
+        row.style.transition = 'background-color 0.3s ease';
+        row.style.backgroundColor = 'rgba(103, 182, 247, 0.2)';
+        
+        setTimeout(() => {
+            row.style.backgroundColor = '';
+        }, 500);
+        
+        // Animar el cambio de subtotal
+        const subtotalCell = row.querySelector('td:nth-child(4)');
+        if (subtotalCell) {
+            subtotalCell.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            subtotalCell.style.transform = 'scale(1.2)';
+            subtotalCell.style.fontWeight = 'bold';
+            
+            setTimeout(() => {
+                subtotalCell.style.transform = 'scale(1)';
+                subtotalCell.style.fontWeight = '';
+            }, 300);
+        }
+    }
+    
+    // Llamar a la función original de actualización (asumiendo que existe en otro archivo)
+    if (window.actualizarCantidadOriginal) {
+        window.actualizarCantidadOriginal(itemId, nuevaCantidad);
+    } else {
+        // Si no existe la función original, implementamos una básica con fetch
+        if (nuevaCantidad < 1) nuevaCantidad = 1;
+        
+        fetch(`/actualizar_cantidad/${itemId}/${nuevaCantidad}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Actualizar el subtotal en la interfaz
+                if (row) {
+                    const subtotalCell = row.querySelector('td:nth-child(4)');
+                    if (subtotalCell) {
+                        subtotalCell.textContent = `$${data.subtotal}`;
+                    }
+                    
+                    // Actualizar el total
+                    const totalCell = document.querySelector('tfoot tr td:nth-child(2)');
+                    if (totalCell) {
+                        totalCell.textContent = `$${data.total}`;
+                        
+                        // Animar el cambio de total
+                        totalCell.style.transition = 'transform 0.3s ease, color 0.3s ease';
+                        totalCell.style.transform = 'scale(1.1)';
+                        totalCell.style.color = '#8d6dd7';
+                        
+                        setTimeout(() => {
+                            totalCell.style.transform = 'scale(1)';
+                            totalCell.style.color = '';
+                        }, 300);
+                    }
+                }
+            }
+        });
+    }
+}
+
+// Función auxiliar para obtener cookies (para CSRF token)
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+{% endblock %}

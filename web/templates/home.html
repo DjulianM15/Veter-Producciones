@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Inicio{% endblock %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'style.css' %}">
+
+<header>
+    <video autoplay muted loop>
+        <source src="{% static 'videos/1202.mp4' %}" type="video/mp4">
+        Tu navegador no soporta el elemento de video.
+    </video>
+    <div class="content">
+        <div class="container">
+            <h1 class="display-3">Bienvenido a Veter Producciones</h1>
+            <p class="lead">Proporcionando sonido e iluminación profesional para tus eventos</p>
+        </div>
+    </div>
+</header>
+
+{% endblock %}

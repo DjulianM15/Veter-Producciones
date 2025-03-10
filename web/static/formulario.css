@@ -1,0 +1,164 @@
+:root {
+    --primary: #52525252;
+    --accent: #7663f1;
+    --gradient-1: #5d82fbc0;
+    --gradient-2: #a877e3c0;
+    --glass-effect: rgba(255, 255, 255, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --card-border: 1px solid rgba(255, 255, 255, 0.2);
+    --card-radius: 20px;
+}
+
+/* Animaciones */
+@keyframes floatAnimation {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-15px) rotate(2deg); }
+    75% { transform: translateY(-5px) rotate(-2deg); }
+}
+
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(118, 99, 241, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(118, 99, 241, 0.6); }
+}
+
+@keyframes shimmerEffect {
+    0% { transform: translateX(-100%) skewX(-15deg); }
+    100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+/* Estilos generales */
+body {
+    background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+    background-size: 400% 400%;
+    animation: gradientFlow 15s ease infinite;
+    min-height: 100vh;
+}
+
+/* Tarjeta del formulario */
+.card {
+    background: var(--glass-effect);
+    backdrop-filter: blur(10px);
+    border: var(--card-border) !important;
+    border-radius: var(--card-radius) !important;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: var(--transition-bounce);
+}
+
+.card:hover {
+    transform: translateY(-10px) rotateX(5deg);
+    animation: glowPulse 2s infinite;
+}
+
+/* Icono de contacto */
+.contact-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    transition: var(--transition-bounce);
+    animation: floatAnimation 3s ease-in-out infinite;
+}
+
+.contact-icon i {
+    font-size: 2rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Campos del formulario */
+.form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--card-radius);
+    color: white;
+    transition: var(--transition-smooth);
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(118, 99, 241, 0.3);
+    color: white;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Etiquetas flotantes */
+.form-floating label {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.form-floating>.form-control:focus~label,
+.form-floating>.form-control:not(:placeholder-shown)~label {
+    color: var(--accent);
+}
+
+/* Botón de envío */
+.btn-primary {
+    background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
+    border: none;
+    border-radius: var(--card-radius);
+    padding: 12px 30px;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: var(--transition-bounce);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.2),
+        transparent
+    );
+    transition: var(--transition-smooth);
+}
+
+.btn-primary:hover::before {
+    animation: shimmerEffect 2s infinite;
+}
+
+/* Textos */
+h2, p {
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .card {
+        margin: 1rem;
+    }
+    
+    .contact-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .contact-icon i {
+        font-size: 1.5rem;
+    }
+}
