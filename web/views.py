@@ -67,7 +67,8 @@ def register(request):
                 if user is not None:
                     auth_login(request, user)
                     if is_ajax:
-                        return JsonResponse({'success': True, 'redirect': 'home'})
+                        # Use absolute URL instead of relative URL
+                        return JsonResponse({'success': True, 'redirect': '/'})
                     else:
                         messages.success(request, "¡Registro exitoso! Has iniciado sesión.")
                         return redirect('home')
@@ -242,25 +243,48 @@ def agregar_al_carrito(request):
 @login_required
 def eliminar_item(request, item_id):
     """
-    Elimina un item específico del carrito del usuario.
+    View to remove an item from the cart.
+    Supports both regular form submissions and AJAX requests.
     """
-    try:
-        item = get_object_or_404(CarritoItem, id=item_id, usuario=request.user)
-        item.delete()
-        
-        messages.success(request, 'Producto eliminado del carrito')
-        return redirect('ver_carrito')
-        
-    except Exception as e:
-        messages.error(request, f'Error al eliminar el producto: {str(e)}')
-        return redirect('ver_carrito')
+    if request.method == 'POST':
+        try:
+            item = CarritoItem.objects.get(id=item_id, usuario=request.user)
+            producto_nombre = item.catalogo.nombre
+            item.delete()
+            
+            # Calculate new total
+            items_carrito = CarritoItem.objects.filter(usuario=request.user)
+            total = sum(item.subtotal() for item in items_carrito)
+            
+            # Check if this is an AJAX request
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': True,
+                    'message': f'"{producto_nombre}" ha sido eliminado del carrito.',
+                    'total': total,
+                    'cart_empty': not items_carrito.exists()
+                })
+            
+            # For regular form submissions
+            messages.success(request, f'"{producto_nombre}" ha sido eliminado del carrito.')
+            return redirect('ver_carrito')
+            
+        except CarritoItem.DoesNotExist:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': False,
+                    'error': 'El producto no existe en el carrito.'
+                })
+            
+            messages.error(request, 'El producto no existe en el carrito.')
+            return redirect('ver_carrito')
+    
+    # If not a POST request
+    return redirect('ver_carrito')
 
 @login_required
 def actualizar_cantidad(request):
-    """
-    Actualiza la cantidad de un producto en el carrito.
-    """
-    if request.method == 'POST':
+    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         try:
             item_id = request.POST.get('item_id')
             cantidad = int(request.POST.get('cantidad', 1))
@@ -268,52 +292,38 @@ def actualizar_cantidad(request):
             if not item_id:
                 return JsonResponse({'success': False, 'error': 'ID de item no proporcionado'}, status=400)
                 
+            # Solo validamos que no sea menor a 1
             if cantidad < 1:
                 cantidad = 1
                 
             item = get_object_or_404(CarritoItem, id=item_id, usuario=request.user)
-            
             item.cantidad = cantidad
             item.save()
             
+            # Recalcular totales
             items_carrito = CarritoItem.objects.filter(usuario=request.user)
             total = sum(i.subtotal() for i in items_carrito)
             
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': True,
-                    'message': 'Cantidad actualizada',
-                    'subtotal': float(item.subtotal()),
-                    'total': float(total)
-                })
-            
-            messages.success(request, 'Cantidad actualizada')
-            return redirect('ver_carrito')
-            
-        except CarritoItem.DoesNotExist:
-            error_msg = 'El item no existe en el carrito'
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({'success': False, 'error': error_msg}, status=404)
-            messages.error(request, error_msg)
-            return redirect('ver_carrito')
-            
-        except ValueError as e:
-            error_msg = 'Valor de cantidad inválido'
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({'success': False, 'error': error_msg}, status=400)
-            messages.error(request, error_msg)
-            return redirect('ver_carrito')
-            
+            return JsonResponse({
+                'success': True,
+                'subtotal': item.subtotal(),
+                'total': total,
+                'message': 'Cantidad actualizada'
+            })
+        except ValueError:
+            return JsonResponse({
+                'success': False,
+                'error': 'Por favor ingresa un número válido'
+            }, status=400)
         except Exception as e:
-            print(f"Error al actualizar cantidad: {str(e)}")
-            
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({'success': False, 'error': str(e)}, status=400)
-            
-            messages.error(request, f'Error al actualizar cantidad: {str(e)}')
-            return redirect('ver_carrito')
-    
-    return redirect('ver_carrito')
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            }, status=500)
+    return JsonResponse({
+        'success': False,
+        'error': 'Método no permitido'
+    }, status=405)
 
 @login_required
 def actualizar_carrito(request, item_id):
@@ -379,27 +389,55 @@ def finalizar_compra(request):
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
         if form.is_valid():
-            orden = form.save(commit=False)
-            orden.usuario = request.user
-            orden.total = total
-            orden.save()
-            
-            for item in carrito_items:
-                OrdenItem.objects.create(
-                    orden=orden,
-                    catalogo=item.catalogo,
-                    cantidad=item.cantidad,
-                    precio=item.catalogo.precio
+            try:
+                # Crear la orden manualmente en lugar de usar form.save()
+                orden = Orden(
+                    usuario=request.user,
+                    nombre=form.cleaned_data['nombre'],
+                    email=form.cleaned_data['email'],
+                    telefono=form.cleaned_data['telefono'],
+                    total=total,
+                    metodo_pago=form.cleaned_data['metodo_pago']
                 )
+                
+                # Solo asignar el campo estado si existe en el modelo
+                try:
+                    orden.estado = 'pendiente'
+                except AttributeError:
+                    # El campo estado no existe, ignorar
+                    pass
+                
+                orden.save()
+                
+                # Crear los items de la orden
+                for item in carrito_items:
+                    OrdenItem.objects.create(
+                        orden=orden,
+                        catalogo=item.catalogo,
+                        cantidad=item.cantidad,
+                        precio=item.catalogo.precio
+                    )
+                
+                # Guardar el ID de la orden en la sesión
+                request.session['orden_id'] = orden.id
+                
+                # Vaciar el carrito
+                carrito_items.delete()
+                
+                # Mostrar mensaje de éxito
+                messages.success(request, "¡Tu pedido ha sido procesado con éxito!")
+                
+                # Redirigir a la página de confirmación
+                return redirect('pedido_confirmado')
             
-            request.session['orden_id'] = orden.id
-            
-            carrito_items.delete()
-            
-            messages.success(request, "¡Tu pedido ha sido procesado con éxito!")
-            
-            return redirect('pedido_confirmado')
+            except Exception as e:
+                # Mostrar mensaje de error
+                messages.error(request, f"Error al procesar el pedido: {str(e)}")
+                
+                # Imprimir el error para depuración
+                print(f"Error al procesar el pedido: {str(e)}")
     else:
+        # Preparar datos iniciales para el formulario
         initial_data = {}
         if request.user.is_authenticated:
             initial_data = {
@@ -408,12 +446,14 @@ def finalizar_compra(request):
             }
         form = CheckoutForm(initial=initial_data)
     
+    # Preparar el contexto para la plantilla
     context = {
         'form': form,
         'carrito_items': carrito_items,
         'total': total
     }
     
+    # Renderizar la plantilla
     return render(request, 'finalizar_compra.html', context)
 
 
@@ -620,6 +660,123 @@ def enviar_correo_confirmacion(orden):
         fail_silently=False,
     )
 
+# historial de pedidos
 
-# reversa
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.utils import timezone
+from .models import Orden, OrdenItem, Catalogo, CarritoItem
 
+@login_required
+def crear_pedido(request):
+    """
+    Vista para crear un nuevo pedido a partir del carrito del usuario.
+    """
+    if request.method == 'POST':
+        # Obtener los items del carrito del usuario
+        carrito_items = CarritoItem.objects.filter(usuario=request.user)
+        
+        if not carrito_items:
+            messages.error(request, 'Tu carrito está vacío.')
+            return redirect('ver_carrito')
+        
+        # Crear una nueva orden
+        orden = Orden(
+            usuario=request.user,
+            nombre=request.POST.get('nombre', request.user.username),
+            email=request.POST.get('email', request.user.email),
+            telefono=request.POST.get('telefono', ''),
+            direccion=request.POST.get('direccion', ''),
+            metodo_pago=request.POST.get('metodo_pago', 'Efectivo'),
+            fecha_creacion=timezone.now()
+        )
+        orden.save()
+        
+        # Crear los items de la orden a partir del carrito
+        for item in carrito_items:
+            OrdenItem.objects.create(
+                orden=orden,
+                catalogo=item.catalogo,
+                cantidad=item.cantidad,
+                precio=item.catalogo.precio
+            )
+        
+        # Calcular y guardar el total
+        orden.total = orden.calcular_total()
+        orden.save()
+        
+        # Limpiar el carrito
+        carrito_items.delete()
+        
+        messages.success(request, f'Pedido #{orden.id} creado correctamente.')
+        return redirect('historial_pedidos')
+    
+    return redirect('ver_carrito')
+
+@login_required
+def historial_pedidos(request):
+    """
+    View to display the order history for the logged-in user.
+    """
+    # Get all orders for the current user, ordered by creation date (newest first)
+    ordenes = Orden.objects.filter(usuario=request.user).order_by('-fecha_creacion')
+    
+    return render(request, 'historial_pedidos.html', {
+        'pedidos': ordenes,
+    })
+
+@login_required
+def cancelar_pedido(request, pedido_id):
+    """
+    Vista para cancelar un pedido existente.
+    Cambia el estado del pedido a 'cancelado' y redirige al historial de pedidos.
+    """
+    try:
+        # Obtener el pedido por ID
+        pedido = Orden.objects.get(id=pedido_id)
+        
+        # Verificar que el pedido pertenece al usuario actual
+        if pedido.email != request.user.email:
+            messages.error(request, "No tienes permiso para cancelar este pedido.")
+            return redirect('historial_pedidos')
+        
+        # Verificar que el pedido no esté ya cancelado
+        if pedido.estado == 'cancelado':
+            messages.warning(request, "Este pedido ya ha sido cancelado anteriormente.")
+            return redirect('detalle_pedido', pedido_id=pedido_id)
+        
+        # Verificar si el pedido está en un estado que permite cancelación
+        if pedido.estado == 'pagado' or pedido.estado == 'completado':
+            messages.error(request, f"No se puede cancelar un pedido que ya ha sido {pedido.estado}.")
+            return redirect('detalle_pedido', pedido_id=pedido_id)
+        
+        # Cambiar el estado del pedido a cancelado
+        pedido.estado = 'cancelado'
+        pedido.save()
+        
+        # Mensaje de éxito
+        messages.success(request, "El pedido ha sido cancelado correctamente.")
+        
+        # Redirigir al historial de pedidos
+        return redirect('historial_pedidos')
+        
+    except Orden.DoesNotExist:
+        messages.error(request, "El pedido no existe.")
+        return redirect('historial_pedidos')
+    except Exception as e:
+        messages.error(request, f"Error al cancelar el pedido: {str(e)}")
+        return redirect('historial_pedidos')
+
+
+@login_required
+def detalle_pedido(request, pedido_id):
+    """
+    View to display the details of a specific order.
+    """
+    # Get the order for the current user
+    orden = get_object_or_404(Orden, id=pedido_id, usuario=request.user)
+    
+    return render(request, 'detalle_pedido.html', {
+        'pedido': orden,
+    })

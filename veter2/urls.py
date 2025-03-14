@@ -57,6 +57,8 @@ urlpatterns = [
     # URL de checkout (nueva)
     path('checkout/', login_required(views.checkout), name='checkout'),
 
-    # reserva
-    
+    # historal de pedidos
+    path('historial-pedidos/', views.historial_pedidos, name='historial_pedidos'),
+    path('cancelar-pedido/<int:pedido_id>/', views.cancelar_pedido, name='cancelar_pedido'),
+    path('pedido/<int:pedido_id>/', views.detalle_pedido, name='detalle_pedido'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

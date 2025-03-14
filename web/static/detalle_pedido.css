@@ -1,0 +1,383 @@
+/* Variables */
+:root {
+    --primary-color: #5d82fb;
+    --primary-hover: #4a6cd9;
+    --secondary-color: #7663f1;
+    --secondary-hover: #7663f1;
+    --success-color: #4CAF50;
+    --danger-color: #ef5350;
+    --danger-hover: #e53935;
+    --text-color: #333333;
+    --text-light: #ffffff;
+    --text-white: #4a4a4a;
+    --background-light: #9fbfff; /* Azul muy claro */
+    --background-medium: #95b7ff; /* Azul claro */
+    --background-lila: #d2bcfd; /* Lila muy claro */
+    --background-lila-medium: #d0b2ff; /* Lila claro */
+    --background-body: #7189ff99; /* Fondo azul oscuro para el body */
+    --border-color: #8296ff; /* Borde azulado */
+    --border-radius: 8px;
+    --box-shadow: 0 4px 12px rgba(93, 130, 251, 0.15);
+    --transition: all 0.3s ease;
+    --header-bg: #7663f1ba; /* Color más oscuro para encabezados */
+}
+
+/* Estilos para el body */
+body {
+    background-color: var(--background-body);
+    color: var(--text-white);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: linear-gradient(135deg, #5d82fba6 0%, #7663f197 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+/* Contenedor principal */
+.pedidos-container {
+    background-color: var(--background-light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 30px;
+    position: relative;
+}
+
+/* Encabezado */
+.pedidos-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.pedidos-title {
+    color: var(--text-white);
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.pedidos-decoration {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 2px;
+    margin: 0 auto;
+}
+
+/* Tabla de pedidos */
+.pedidos-table-container {
+    background-color: var(--background-medium);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    margin-bottom: 25px;
+}
+
+.pedidos-table {
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.pedidos-thead {
+    background-color: var(--header-bg); /* Color más oscuro para encabezados */
+}
+
+.pedidos-thead th {
+    color: #377347; /* Amarillo para mejor contraste */
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    padding: 15px;
+    border: none;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
+}
+
+.pedidos-thead th i {
+    margin-right: 5px;
+    color: #253760; /* Amarillo para los iconos también */
+}
+
+.pedidos-table tbody tr {
+    transition: var(--transition);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.pedidos-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.pedidos-table tbody tr:hover {
+    background-color: var(--background-lila-medium);
+}
+
+.pedidos-table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    color: var(--text-white);
+    font-size: 0.95rem;
+    text-align: center;
+    background-color: var(--background-light);
+    font-weight: 500;
+}
+
+.pedido-id {
+    font-weight: 700;
+    color: var(--text-white);
+}
+
+.pedido-total {
+    font-weight: 700;
+}
+
+.pedido-cancelado td {
+    background-color: rgba(239, 83, 80, 0.2);
+}
+
+/* Badges de estado */
+.pedido-badge {
+    padding: 6px 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 100px;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pedido-badge i {
+    font-size: 0.9rem;
+}
+
+.pedido-badge-pagado {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.pedido-badge-pendiente {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.pedido-badge-cancelado {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+/* Botones */
+.pedido-btn-ver {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: var(--transition);
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pedido-btn-ver:hover {
+    background-color: var(--primary-hover);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+/* Botón de cancelar pedido */
+.pedido-btn-cancelar {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: var(--transition);
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pedido-btn-cancelar:hover {
+    background-color: var(--danger-hover);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+/* Botón de volver */
+.pedido-btn-volver {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: var(--transition);
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pedido-btn-volver:hover {
+    background-color: var(--secondary-hover);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+/* Estilos para la página de detalles */
+.pedido-detalle-card {
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    margin-bottom: 25px;
+    background-color: var(--background-light);
+    border: 1px solid var(--border-color);
+}
+
+.pedido-detalle-header {
+    background-color: var(--header-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 20px;
+}
+
+.pedido-detalle-header h5 {
+    color: #ffffff;
+    font-weight: 700;
+    margin: 0;
+    font-size: 1rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+}
+
+.pedido-detalle-header h5 i {
+    margin-right: 8px;
+    color: #fafdff;
+}
+
+.pedido-detalle-table {
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.pedido-detalle-thead {
+    background-color: var(--header-bg);
+}
+
+.pedido-detalle-thead th {
+    color: #3e5463;
+    font-weight: 700;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    border: none;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.pedido-detalle-table tbody tr {
+    background-color: var(--background-light);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.pedido-detalle-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.pedido-detalle-table tbody tr:hover {
+    background-color: var(--background-lila-medium);
+}
+
+.pedido-detalle-table tbody td {
+    padding: 12px 15px;
+    color: var(--text-white);
+    font-weight: 500;
+    text-align: center;
+}
+
+.pedido-detalle-table tfoot {
+    background-color: var(--background-medium);
+}
+
+.pedido-detalle-table tfoot td {
+    font-weight: 700;
+    color: var(--text-white);
+    padding: 12px 15px;
+}
+
+/* Información del cliente y pedido */
+.cliente-info-row {
+    background-color: var(--background-medium);
+    border-radius: var(--border-radius);
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.cliente-info-label {
+    color: #ffffff;
+    font-weight: 600;
+    margin-right: 5px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.cliente-info-label i {
+    margin-right: 5px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .pedidos-container {
+        padding: 20px 15px;
+    }
+    
+    .pedidos-title {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .pedidos-thead th {
+        font-size: 0.75rem;
+        padding: 10px 5px;
+    }
+    
+    .pedidos-table tbody td {
+        font-size: 0.85rem;
+        padding: 12px 5px;
+    }
+    
+    .pedido-badge {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+        min-width: 90px;
+    }
+    
+    .pedido-btn-ver {
+        padding: 5px 12px;
+        font-size: 0.75rem;
+    }
+    
+    .pedido-detalle-thead th,
+    .pedido-detalle-table td {
+        padding: 8px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .pedidos-title {
+        font-size: 1.5rem;
+    }
+    
+    .pedido-detalle-table {
+        min-width: 500px;
+    }
+}

@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% block title %}Nosotros - Veter Producciones{% endblock %}
 {% load static %}
@@ -12,9 +13,12 @@
 <!-- Header -->
 <header class="text-white text-center py-5 parallax" data-speed="0.5">
     <div class="container">
+        <i class="fas fa-music fa-3x mb-3 animate__animated animate__fadeIn"></i>
         <h1 class="animate__animated animate__fadeIn">Veter Producciones</h1>
         <p class="lead animate__animated animate__fadeIn animate__delay-1s">
+            <i class="fas fa-star mx-2"></i>
             Creando experiencias únicas a través del sonido y la iluminación
+            <i class="fas fa-star mx-2"></i>
         </p>
     </div>
 </header>
@@ -25,12 +29,14 @@
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-right">
                 <div class="card">
+                    <i class="fas fa-bullseye fa-3x mb-3"></i>
                     <h2>Misión</h2>
                     <p>Nuestra misión es proporcionar sonido e iluminación profesional, creando experiencias inolvidables en cada evento.</p>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-left">
                 <div class="card">
+                    <i class="fas fa-eye fa-3x mb-3"></i>
                     <h2>Visión</h2>
                     <p>Nuestra visión es ser líderes en la industria, conocidos por nuestra innovación y excelencia en cada servicio que ofrecemos.</p>
                 </div>
@@ -42,61 +48,61 @@
 <!-- Galería de Fotos -->
 <section class="gallery-section py-5">
     <div class="container">
-        <h2 class="text-center mb-5" data-aos="fade-up">Galería de Fotos</h2>
+        <h2 class="text-center mb-5" data-aos="fade-up"><i class="fas fa-images me-2"></i>Galería de Fotos</h2>
         <div class="gallery">
             <div class="card" data-aos="fade-up">
                 <img src="{% static 'imagenes/Eventos/IMG_20240531_193319.jpg' %}" alt="Evento Social">
                 <div class="card__content">
-                    <p class="card__title">Evento Social</p>
+                    <p class="card__title"><i class="fas fa-building me-2"></i>Evento Social</p>
                     <p class="card__description">FundaCoofisam</p>
                 </div>
             </div>
             <div class="card" data-aos="fade-up">
                 <img src="{% static 'imagenes/Eventos/IMG_20240608_225011.jpg' %}" alt="15 Años">
                 <div class="card__content">
-                    <p class="card__title">15 Años #1</p>
+                    <p class="card__title"><i class="fas fa-birthday-cake me-2"></i>15 Años #1</p>
                     <p class="card__description">Celebración de 15 años</p>
                 </div>
             </div>
             <div class="card" data-aos="fade-up">
                 <img src="{% static 'imagenes/Eventos/IMG_20240621_185451.jpg' %}" alt="Evento CeSalud">
                 <div class="card__content">
-                    <p class="card__title">Evento</p>
+                    <p class="card__title"><i class="fas fa-calendar-day me-2"></i>Evento</p>
                     <p class="card__description">CeSalud</p>
                 </div>
             </div>
             <div class="card" data-aos="fade-up">
                 <img src="{% static 'imagenes/Eventos/IMG_20240907_230216.jpg' %}" alt="15 Años">
                 <div class="card__content">
-                    <p class="card__title">15 Años #2</p>
+                    <p class="card__title"><i class="fas fa-birthday-cake me-2"></i>15 Años #2</p>
                     <p class="card__description">Celebración de 15 años</p>
                 </div>
             </div>
             <div class="card" data-aos="fade-up">
                 <img src="{% static 'imagenes/Eventos/IMG_20240622_211451.jpg' %}" alt="15 Años">
                 <div class="card__content">
-                    <p class="card__title">15 Años #3</p>
+                    <p class="card__title"><i class="fas fa-birthday-cake me-2"></i>15 Años #3</p>
                     <p class="card__description">Celebración de 15 años</p>
                 </div>
             </div>
             <div class="card" data-aos="fade-up">
                 <img src="{% static 'imagenes/Eventos/IMG_20240622_220231.jpg' %}" alt="15 Años">
                 <div class="card__content">
-                    <p class="card__title">15 Años #4</p>
+                    <p class="card__title"><i class="fas fa-birthday-cake me-2"></i>15 Años #4</p>
                     <p class="card__description">Celebración de 15 años</p>
                 </div>
             </div>
             <div class="card" data-aos="fade-up">
                 <img src="{% static 'imagenes/Eventos/IMG_20240823_191107.jpg' %}" alt="Cumpleaños">
                 <div class="card__content">
-                    <p class="card__title">Cumpleaños</p>
+                    <p class="card__title"><i class="fas fa-gifts me-2"></i>Cumpleaños</p>
                     <p class="card__description">Celebración de cumpleaños</p>
                 </div>
             </div>
             <div class="card" data-aos="fade-up">
                 <img src="{% static 'imagenes/Eventos/IMG_20240907_230440.jpg' %}" alt="15 Años">
                 <div class="card__content">
-                    <p class="card__title">15 Años #5</p>
+                    <p class="card__title"><i class="fas fa-birthday-cake me-2"></i>15 Años #5</p>
                     <p class="card__description">Celebración de 15 años</p>
                 </div>
             </div>
@@ -107,7 +113,7 @@
 <!-- Videos -->
 <section class="videos-section py-5">
     <div class="container">
-        <h2 class="text-center mb-5" data-aos="fade-up">Nuestros Videos</h2>
+        <h2 class="text-center mb-5" data-aos="fade-up"><i class="fas fa-film me-2"></i>Nuestros Videos</h2>
         <div class="row">
             <div class="col-md-4 mb-4" data-aos="fade-up">
                 <div class="video-container">
@@ -146,7 +152,7 @@
 <!-- Testimonios -->
 <section class="testimonials py-5">
     <div class="container">
-        <h2 class="text-center mb-5" data-aos="fade-up">Lo que dicen nuestros clientes</h2>
+        <h2 class="text-center mb-5" data-aos="fade-up"><i class="fas fa-comments me-2"></i>Lo que dicen nuestros clientes</h2>
         <div class="row justify-content-center">
             <!-- Testimonio 1 -->
             <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
@@ -154,7 +160,7 @@
                     <div class="testimonial-content">
                         <i class="fas fa-quote-left"></i>
                         <p>"¡Increíble servicio! La iluminación transformó completamente nuestro evento."</p>
-                        <small>- María González, Fiesta de 15 años</small>
+                        <small><i class="fas fa-user me-2"></i>- María González, Fiesta de 15 años</small>
                     </div>
                 </div>
             </div>
@@ -165,7 +171,7 @@
                     <div class="testimonial-content">
                         <i class="fas fa-quote-left"></i>
                         <p>"El sonido fue excelente, muy profesionales y puntuales. ¡Superó nuestras expectativas!"</p>
-                        <small>- Juan Pérez, Evento Empresarial</small>
+                        <small><i class="fas fa-user me-2"></i>- Juan Pérez, Evento Empresarial</small>
                     </div>
                 </div>
             </div>
@@ -176,7 +182,7 @@
                     <div class="testimonial-content">
                         <i class="fas fa-quote-left"></i>
                         <p>"La mejor decisión para nuestra boda. El ambiente que crearon fue mágico."</p>
-                        <small>- Ana Martínez, Boda</small>
+                        <small><i class="fas fa-user me-2"></i>- Ana Martínez, Boda</small>
                     </div>
                 </div>
             </div>
@@ -187,7 +193,7 @@
 <!-- Ubicación -->
 <section class="location-section py-5">
     <div class="container">
-        <h2 class="text-center mb-5" data-aos="fade-up">Encuéntranos Aquí</h2>
+        <h2 class="text-center mb-5" data-aos="fade-up"><i class="fas fa-map-marker-alt me-2"></i>Encuéntranos Aquí</h2>
         <div class="row justify-content-center">
             <div class="col-12" data-aos="fade-up">
                 <div class="map-container">

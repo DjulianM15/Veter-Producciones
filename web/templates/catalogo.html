@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Catálogo{% endblock %}
 {% load static %}
+{% load humanize %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'catalogo.css' %}">
@@ -32,7 +33,7 @@
                         <h5 class="card-title text-center">{{ catalogo_item.nombre }}</h5>
                         <p class="card-text text-muted">{{ catalogo_item.description }}</p>
                         <div class="d-flex justify-content-between align-items-center mt-3">
-                            <span class="price-tag">${{ catalogo_item.precio }}</span>
+                            <span class="price-tag">${{ catalogo_item.precio|floatformat:0|intcomma }}</span>
                             <button class="btn btn-outline-primary btn-sm add-to-cart" 
                                     onclick="agregarAlCarrito('{{ catalogo_item.id }}')">
                                 <i class="fas fa-cart-plus me-1"></i>
@@ -55,7 +56,7 @@
                             <img src="{{ catalogo_item.foto.url }}" class="img-fluid producto-imagen-grande" alt="{{ catalogo_item.nombre }}">
                             <div class="mt-3">
                                 <p class="producto-descripcion">{{ catalogo_item.description }}</p>
-                                <p class="precio-modal">${{ catalogo_item.precio }}</p>
+                                <p class="precio-modal">${{ catalogo_item.precio|floatformat:0|intcomma }}</p>
                                 <button class="btn btn-primary" onclick="agregarAlCarrito('{{ catalogo_item.id }}')">
                                     <i class="fas fa-cart-plus me-1"></i>
                                     Agregar al Carrito
@@ -83,50 +84,140 @@
         mirror: false
     });
 
-    function agregarAlCarrito(catalogoId) {
-    // Agregar console.log para debugging
-    console.log('Agregando producto:', catalogoId);
-    
-    const formData = new FormData();
-    formData.append('catalogo_id', catalogoId);
-    formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
-
-    fetch('/agregar-al-carrito/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => {
-        console.log('Respuesta del servidor:', response);
-        return response.json();
-    })
-    .then(data => {
-        console.log('Datos recibidos:', data);
-        if (data.success) {
-            const cartBadge = document.querySelector('.badge');
-            if (cartBadge) {
-                cartBadge.textContent = data.cart_count;
-            }
+    // Fix for dropdown menu in catalogo.html
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ensure Bootstrap is loaded
+        if (typeof bootstrap !== 'undefined') {
+            // Initialize all dropdowns manually
+            var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+            dropdownElementList.map(function(dropdownToggleEl) {
+                return new bootstrap.Dropdown(dropdownToggleEl);
+            });
             
-            Swal.fire({
-                icon: 'success',
-                title: '¡Producto agregado!',
-                text: 'El producto se ha agregado al carrito',
-                showConfirmButton: false,
-                timer: 1500
+            // Add click event listener to dropdown toggle
+            document.querySelectorAll('.dropdown-toggle').forEach(function(element) {
+                element.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var dropdown = bootstrap.Dropdown.getInstance(this);
+                    if (!dropdown) {
+                        dropdown = new bootstrap.Dropdown(this);
+                    }
+                    dropdown.toggle();
+                });
             });
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Ha ocurrido un error al procesar la solicitud'
-        });
+        
+        // Fix for manual link
+        const manualLink = document.querySelector('a[href$="Manual _de_usuario.pdf"]');
+        if (manualLink) {
+            manualLink.addEventListener('click', function(e) {
+                // Log to console for debugging
+                console.log('Manual link clicked');
+                
+                // Verify if the file exists
+                fetch(this.href, { method: 'HEAD' })
+                    .then(response => {
+                        if (!response.ok) {
+                            e.preventDefault();
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'El manual no está disponible en este momento.',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        } else {
+                            console.log('Manual file exists, opening...');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error verificando el manual:', error);
+                    });
+            });
+        }
     });
-}
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function agregarAlCarrito(catalogoId) {
+        // Obtener el token CSRF
+        const csrftoken = getCookie('csrftoken');
+        
+        // Mostrar indicador de carga
+        Swal.fire({
+            title: 'Agregando al carrito...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        // Preparar los datos
+        const formData = new FormData();
+        formData.append('catalogo_id', catalogoId);
+        formData.append('csrfmiddlewaretoken', csrftoken);
+
+        // Realizar la petición
+        fetch('{% url "agregar_al_carrito" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Actualizar el contador del carrito
+                const cartBadge = document.querySelector('.badge');
+                if (cartBadge) {
+                    cartBadge.textContent = data.cart_count;
+                }
+                
+                // Mostrar mensaje de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Producto agregado!',
+                    text: data.message || 'El producto se ha agregado al carrito correctamente',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                // Cerrar el modal si está abierto
+                const modal = bootstrap.Modal.getInstance(document.querySelector('.modal.show'));
+                if (modal) {
+                    modal.hide();
+                }
+            } else {
+                throw new Error(data.error || 'Error al agregar al carrito');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Ha ocurrido un error al agregar el producto al carrito',
+                confirmButtonText: 'Aceptar'
+            });
+        });
+    }
 </script>
 {% endblock %}

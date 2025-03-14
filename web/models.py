@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Catalogo(models.Model):  # Nombre del modelo en PascalCase
     nombre = models.CharField(max_length=200)
@@ -22,13 +23,13 @@ class Catalogo(models.Model):  # Nombre del modelo en PascalCase
         return reverse('catalogo-detalle', kwargs={'pk': self.pk})
 
     def precio_formatted(self):
-        return f"${self.precio:,.2f}"
+        return f"${self.precio:.2f}"
 
 
 class CarritoItem(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    catalogo = models.ForeignKey(Catalogo, on_delete=models.CASCADE)  # Campo relacionado con el producto
-    cantidad = models.IntegerField(default=1)
+    catalogo = models.ForeignKey(Catalogo, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField(default=1)
     fecha_agregado = models.DateTimeField(auto_now_add=True)
 
     def subtotal(self):
@@ -44,31 +45,45 @@ class Datos(models.Model):
     
 
 class Orden(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=200)
     email = models.EmailField()
     telefono = models.CharField(max_length=20)
-    sesion_id = models.CharField(max_length=100, null=True, blank=True)
-    total = models.DecimalField(max_digits=10, decimal_places=0)
-    metodo_pago = models.CharField(max_length=20, choices=[('nequi', 'Nequi',), ('bancolombia', 'Bancolombia')])
-    pagado = models.BooleanField(default=False)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    metodo_pago = models.CharField(max_length=50, choices=[
+        ('tarjeta', 'Tarjeta de Crédito/Débito'),
+        ('transferencia', 'Transferencia Bancaria'),
+        ('efectivo', 'Efectivo en Entrega'),
+        ('nequi', 'Nequi'),
+        ('bancolombia', 'Bancolombia')
+    ])
+    estado = models.CharField(max_length=50, default='pendiente', choices=[
+        ('pendiente', 'Pendiente'),
+        ('pagado', 'Pagado'),
+        ('cancelado', 'Cancelado')
+    ])
 
     def __str__(self):
         return f"Orden #{self.id} - {self.nombre}"
     
+    class Meta:
+        verbose_name = "Orden"
+        verbose_name_plural = "Órdenes"
+        ordering = ['-fecha_creacion']
+    
 class OrdenItem(models.Model):
     orden = models.ForeignKey(Orden, related_name='items', on_delete=models.CASCADE)
-    catalogo = models.ForeignKey(Catalogo, on_delete=models.CASCADE)  # Corregido a Catalogo con mayúscula
+    catalogo = models.ForeignKey(Catalogo, on_delete=models.CASCADE)
     precio = models.DecimalField(max_digits=10, decimal_places=0)
-    cantidad = models.IntegerField(default=1)
+    cantidad = models.PositiveIntegerField(default=1)
+    
+    class Meta:
+        verbose_name = "Item de Orden"
+        verbose_name_plural = "Items de Órdenes"
 
     def __str__(self):
         return f"{self.cantidad} x {self.catalogo.nombre}"
     
     def subtotal(self):
         return self.precio * self.cantidad
-    
-
-# reserva
-

@@ -73,7 +73,7 @@ header {
     clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
     overflow: hidden;
     padding: 8rem 0 8rem; /* Aumentado el padding superior de 6rem a 8rem */
-    margin-top: 2rem; /* Añadido margen superior */
+    margin-top: 4rem; /* Añadido margen superior */
 }
 
 header::before {

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}Finalizar Compra{% endblock %}
 
@@ -13,8 +14,10 @@
     {% if messages %}
     <div class="messages">
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} me-2"></i>
             {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endfor %}
     </div>
@@ -22,89 +25,169 @@
 
     <div class="checkout-grid">
         <div class="checkout-form">
-            <h2 class="resumen_titulo">Datos De Cantacto</h2>
+            <div class="checkout-progress">
+                <div class="progress-step active">
+                    <div class="step-icon"><i class="fas fa-shopping-cart"></i></div>
+                    <div class="step-label">Carrito</div>
+                </div>
+                <div class="progress-step active current">
+                    <div class="step-icon"><i class="fas fa-user"></i></div>
+                    <div class="step-label">Datos</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon"><i class="fas fa-check"></i></div>
+                    <div class="step-label">Confirmación</div>
+                </div>
+            </div>
+
+            <h2 class="form-section-title">
+                <i class="fas fa-user-circle me-2"></i>Datos De Contacto
+            </h2>
             <form method="POST">
                 {% csrf_token %}
 
                 <div class="form-group">
-                    <label for="{{ form.nombre.id_for_label }}">Nombre Completo</label>
+                    <label for="{{ form.nombre.id_for_label }}">
+                        <i class="fas fa-user me-2"></i>Nombre Completo
+                    </label>
                     {{ form.nombre }}
                     {% if form.nombre.errors %}
-                    <div class="form-error">{{ form.nombre.errors }}</div>
+                    <div class="form-error">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        {{ form.nombre.errors }}
+                    </div>
                     {% endif %}
                 </div>
 
-                <div class="form-group">
-                    <label for="{{ form.email.id_for_label }}">Correo Electronico</label>
-                    {{ form.email }}
-                    {% if form.email.errors %}
-                    <div class="form-error">{{ form.email.errors }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.telefono.id_for_label }}">Telefono</label>
-                    {{ form.telefono }}
-                    {% if form.telefono.errors %}
-                    <div class="form-error">{{ form.telefono.errors }}</div>
-                    {% endif %}
-                </div>
-
-                <h2 class="resumen-titulo">Metodo de Pago</h2>
-                <div class="form-group">
-                    {% for radio in form.metodo_pago %}
+                <div class="form-row">
                     <div class="form-group">
-                        {{ radio.tag }} {{ radio.choice_label }}
+                        <label for="{{ form.email.id_for_label }}">
+                            <i class="fas fa-envelope me-2"></i>Correo Electrónico
+                        </label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <div class="form-error">
+                            <i class="fas fa-exclamation-circle me-1"></i>
+                            {{ form.email.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.telefono.id_for_label }}">
+                            <i class="fas fa-phone me-2"></i>Teléfono
+                        </label>
+                        {{ form.telefono }}
+                        {% if form.telefono.errors %}
+                        <div class="form-error">
+                            <i class="fas fa-exclamation-circle me-1"></i>
+                            {{ form.telefono.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <h2 class="form-section-title">
+                    <i class="fas fa-credit-card me-2"></i>Método de Pago
+                </h2>
+                <div class="payment-methods">
+                    {% for radio in form.metodo_pago %}
+                    <div class="payment-method">
+                        <div class="form-check">
+                            {{ radio.tag }}
+                            <label for="{{ radio.id_for_label }}" class="payment-label">
+                                {% if 'Tarjeta' in radio.choice_label %}
+                                <i class="fas fa-credit-card payment-icon"></i>
+                                {% elif 'Transferencia' in radio.choice_label %}
+                                <i class="fas fa-university payment-icon"></i>
+                                {% elif 'Efectivo' in radio.choice_label %}
+                                <i class="fas fa-money-bill-wave payment-icon"></i>
+                                {% else %}
+                                <i class="fas fa-wallet payment-icon"></i>
+                                {% endif %}
+                                {{ radio.choice_label }}
+                            </label>
+                        </div>
                     </div>
                     {% endfor %}
                     {% if form.metodo_pago.errors %}
-                    <div class="form-error">{{ form.metodo_pago.errors }}</div>
+                    <div class="form-error">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        {{ form.metodo_pago.errors }}
+                    </div>
                     {% endif %}
                 </div>
 
-                <button type="submit" class="btn btn-success">
-                    Confirmar pedido
-                </button>
+                <!-- Fixed checkout buttons with proper spacing -->
+                <div class="checkout-buttons">
+                    <a href="{% url 'ver_carrito' %}" class="btn btn-outline btn-back">
+                        <i class="fas fa-arrow-left me-2"></i> Volver al Carrito
+                    </a>
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-check-circle me-2"></i> Confirmar Pedido
+                    </button>
+                </div>
             </form>
         </div>
 
         <div class="checkout-resumen">
-            <h2 class="resumen-titulo">Resumen del Pedido</h2>
+            <h2 class="resumen-titulo">
+                <i class="fas fa-shopping-bag me-2"></i>Resumen del Pedido
+            </h2>
 
-            {% for item in carrito_items %}
-            <div class="resumen-item">
-                <div class="resumen-producto">
-                    <img src="{{ catalogo_item.foto.url }}" 
-                    alt="{{ item.producto.nombre }}" class="resumen-imagen">
-
-                    <div>   
-                        <div>{{ item.producto.nombre }}</div>
-                        <div>Cantidad {{ item.cantidad }}</div>
+            <div class="resumen-items">
+                {% for item in carrito_items %}
+                <div class="resumen-item">
+                    <div class="resumen-producto">
+                        <div class="img-container">
+                            <img src="{{ item.catalogo.foto.url }}" 
+                            alt="{{ item.catalogo.nombre }}" class="resumen-imagen">
+                        </div>
+                        <div class="producto-info">   
+                            <div class="producto-nombre">{{ item.catalogo.nombre }}</div>
+                            <div class="producto-cantidad">
+                                <span class="cantidad-badge">{{ item.cantidad }}</span> unidad(es)
+                            </div>
+                        </div>
                     </div>
+                    <div class="producto-precio">${{ item.subtotal|floatformat:0|intcomma }}</div>
                 </div>
-                <div>${{ item.subtotal }}</div>
-            </div>
-            {% endfor %}
-
-            <div class="resumen-total">
-                Total: ${{ total }}
+                {% endfor %}
             </div>
 
-            <div class="margin-top: 2rem;">
-                <a href="{% url 'ver_carrito' %}" class="btn btn-outline">
-                    Volver al Carrito
-                </a>
+            <div class="resumen-detalles">
+                <div class="detalle-item">
+                    <span>Subtotal</span>
+                    <span>${{ total|floatformat:0|intcomma }}</span>
+                </div>
+                <div class="detalle-item">
+                    <span>Envío</span>
+                    <span>Gratis</span>
+                </div>
+                <div class="resumen-total">
+                    <span>Total</span>
+                    <span>${{ total|floatformat:0|intcomma }}</span>
+                </div>
+            </div>
+
+            <div class="secure-checkout">
+                <div class="secure-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <div class="secure-text">
+                    <h4>Compra Segura</h4>
+                    <p>Tus datos están protegidos y tu información es confidencial.</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-
-    // Animaciones para el carrito de compras
+// Animaciones para el carrito de compras
 document.addEventListener('DOMContentLoaded', function() {
     // Animación de entrada para el título
-    const title = document.querySelector('h2');
+    const title = document.querySelector('.checkout-titulo');
     if (title) {
         title.style.opacity = '0';
         title.style.transform = 'translateY(-20px)';
@@ -129,16 +212,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 500 + (index * 150));
     });
     
-    // Animación para las filas de la tabla
-    const tableRows = document.querySelectorAll('tbody tr');
-    tableRows.forEach((row, index) => {
-        row.style.opacity = '0';
-        row.style.transform = 'translateY(20px)';
+    // Animación para los elementos del resumen
+    const resumenItems = document.querySelectorAll('.resumen-item');
+    resumenItems.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
         
         setTimeout(() => {
-            row.style.transition = 'all 0.4s ease-out';
-            row.style.opacity = '1';
-            row.style.transform = 'translateY(0)';
+            item.style.transition = 'all 0.4s ease-out';
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
         }, 800 + (index * 100));
     });
     
@@ -167,12 +250,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Animación para las imágenes de productos
-    const productImages = document.querySelectorAll('.img-thumbnail');
+    const productImages = document.querySelectorAll('.resumen-imagen');
     productImages.forEach(img => {
         // Efecto de zoom suave al hover
         img.addEventListener('mouseenter', function() {
             this.style.transition = 'all 0.3s ease';
-            this.style.transform = 'scale(1.8) rotate(5deg)';
+            this.style.transform = 'scale(1.2) rotate(5deg)';
             this.style.zIndex = '10';
             this.style.boxShadow = '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)';
         });
@@ -205,117 +288,65 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Animación para los controles de cantidad
-    const quantityControls = document.querySelectorAll('.quantity-control');
-    quantityControls.forEach(control => {
-        control.querySelectorAll('button').forEach(btn => {
-            btn.addEventListener('click', function() {
-                // Efecto de pulso al hacer clic
-                this.classList.add('pulse-animation');
-                setTimeout(() => {
-                    this.classList.remove('pulse-animation');
-                }, 500);
-            });
-        });
-    });
-    
     // Animación para el total
-    const totalRow = document.querySelector('tfoot tr');
-    if (totalRow) {
-        totalRow.style.opacity = '0';
-        totalRow.style.transform = 'scale(0.9)';
+    const totalElement = document.querySelector('.resumen-total');
+    if (totalElement) {
+        totalElement.style.opacity = '0';
+        totalElement.style.transform = 'scale(0.9)';
         
         setTimeout(() => {
-            totalRow.style.transition = 'all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
-            totalRow.style.opacity = '1';
-            totalRow.style.transform = 'scale(1)';
+            totalElement.style.transition = 'all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+            totalElement.style.opacity = '1';
+            totalElement.style.transform = 'scale(1)';
             
             // Efecto de destello para el total
             setTimeout(() => {
-                totalRow.style.transition = 'background-color 0.3s ease';
-                totalRow.style.backgroundColor = 'rgba(167, 119, 224, 0.2)';
+                totalElement.style.transition = 'background-color 0.3s ease';
+                totalElement.style.backgroundColor = 'rgba(167, 119, 224, 0.2)';
                 
                 setTimeout(() => {
-                    totalRow.style.backgroundColor = '';
+                    totalElement.style.backgroundColor = '';
                 }, 500);
             }, 600);
         }, 1500);
     }
-});
-
-// Función para animar la actualización de cantidad
-function actualizarCantidad(itemId, nuevaCantidad) {
-    // Obtener la fila del producto
-    const row = document.querySelector(`tr[data-item-id="${itemId}"]`);
     
-    // Animar el cambio
-    if (row) {
-        // Efecto de flash en la fila
-        row.style.transition = 'background-color 0.3s ease';
-        row.style.backgroundColor = 'rgba(103, 182, 247, 0.2)';
+    // Animación para los métodos de pago
+    const paymentMethods = document.querySelectorAll('.payment-method');
+    paymentMethods.forEach((method, index) => {
+        method.style.opacity = '0';
+        method.style.transform = 'translateY(15px)';
         
         setTimeout(() => {
-            row.style.backgroundColor = '';
-        }, 500);
+            method.style.transition = 'all 0.4s ease-out';
+            method.style.opacity = '1';
+            method.style.transform = 'translateY(0)';
+        }, 1000 + (index * 150));
         
-        // Animar el cambio de subtotal
-        const subtotalCell = row.querySelector('td:nth-child(4)');
-        if (subtotalCell) {
-            subtotalCell.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            subtotalCell.style.transform = 'scale(1.2)';
-            subtotalCell.style.fontWeight = 'bold';
-            
-            setTimeout(() => {
-                subtotalCell.style.transform = 'scale(1)';
-                subtotalCell.style.fontWeight = '';
-            }, 300);
-        }
-    }
-    
-    // Llamar a la función original de actualización (asumiendo que existe en otro archivo)
-    if (window.actualizarCantidadOriginal) {
-        window.actualizarCantidadOriginal(itemId, nuevaCantidad);
-    } else {
-        // Si no existe la función original, implementamos una básica con fetch
-        if (nuevaCantidad < 1) nuevaCantidad = 1;
+        // Efecto de selección
+        const radio = method.querySelector('input[type="radio"]');
+        const label = method.querySelector('label');
         
-        fetch(`/actualizar_cantidad/${itemId}/${nuevaCantidad}/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Actualizar el subtotal en la interfaz
-                if (row) {
-                    const subtotalCell = row.querySelector('td:nth-child(4)');
-                    if (subtotalCell) {
-                        subtotalCell.textContent = `$${data.subtotal}`;
-                    }
+        if (radio && label) {
+            radio.addEventListener('change', function() {
+                // Resetear todos los métodos
+                paymentMethods.forEach(m => {
+                    m.classList.remove('selected');
+                });
+                
+                // Marcar el seleccionado
+                if (this.checked) {
+                    method.classList.add('selected');
+                    method.style.transform = 'scale(1.05)';
                     
-                    // Actualizar el total
-                    const totalCell = document.querySelector('tfoot tr td:nth-child(2)');
-                    if (totalCell) {
-                        totalCell.textContent = `$${data.total}`;
-                        
-                        // Animar el cambio de total
-                        totalCell.style.transition = 'transform 0.3s ease, color 0.3s ease';
-                        totalCell.style.transform = 'scale(1.1)';
-                        totalCell.style.color = '#8d6dd7';
-                        
-                        setTimeout(() => {
-                            totalCell.style.transform = 'scale(1)';
-                            totalCell.style.color = '';
-                        }, 300);
-                    }
+                    setTimeout(() => {
+                        method.style.transform = 'scale(1)';
+                    }, 300);
                 }
-            }
-        });
-    }
-}
+            });
+        }
+    });
+});
 
 // Función auxiliar para obtener cookies (para CSRF token)
 function getCookie(name) {

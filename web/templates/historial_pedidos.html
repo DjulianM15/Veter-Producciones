@@ -1,0 +1,372 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Historial de Pedidos - Veter Producciones{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'historial_pedidos.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+<div class="container pedidos-container" style="margin-top: 120px; margin-bottom: 50px;">
+    <div class="pedidos-header animate__animated animate__fadeInDown">
+        <h2 class="pedidos-title">Mi Historial de Pedidos</h2>
+        <div class="pedidos-decoration"></div>
+    </div>
+    
+    {% if pedidos %}
+        <div class="pedidos-filters mb-4 animate__animated animate__fadeIn">
+            <div class="filter-label">
+                <i class="fas fa-filter"></i> Filtrar por:
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-list-ul"></i> Todos
+                </button>
+                <button class="filter-btn" data-filter="pendiente">
+                    <i class="fas fa-clock"></i> Pendientes
+                </button>
+                <button class="filter-btn" data-filter="pagado">
+                    <i class="fas fa-check-circle"></i> Pagados
+                </button>
+                <button class="filter-btn" data-filter="cancelado">
+                    <i class="fas fa-times-circle"></i> Cancelados
+                </button>
+            </div>
+        </div>
+        
+        <div class="table-responsive pedidos-table-container animate__animated animate__fadeInUp">
+            <table class="table table-hover pedidos-table">
+                <thead class="pedidos-thead">
+                    <tr>
+                        <th><i class="fas fa-hashtag"></i> Pedido</th>
+                        <th><i class="far fa-calendar-alt"></i> Fecha</th>
+                        <th><i class="fas fa-dollar-sign"></i> Total</th>
+                        <th><i class="fas fa-tag"></i> Estado</th>
+                        <th><i class="far fa-credit-card"></i> Pago</th>
+                        <th><i class="fas fa-search"></i> Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pedido in pedidos %}
+                    <tr class="pedido-row {% if pedido.estado == 'cancelado' %}pedido-cancelado{% endif %}" 
+                        data-estado="{{ pedido.estado }}"
+                        data-pedido-id="{{ pedido.id }}">
+                        <td class="pedido-id">#{{ pedido.id }}</td>
+                        <td class="pedido-fecha">
+                            <span class="fecha-completa">{{ pedido.fecha_creacion|date:"d/m/Y H:i" }}</span>
+                            <span class="fecha-dia">{{ pedido.fecha_creacion|date:"d" }}</span>
+                            <span class="fecha-mes">{{ pedido.fecha_creacion|date:"M" }}</span>
+                        </td>
+                        <td class="pedido-total">
+                            <span class="monto">${{ pedido.total|floatformat:0 }}</span>
+                        </td>
+                        <td>
+                            <span class="badge pedido-badge 
+                                {% if pedido.estado == 'cancelado' %}pedido-badge-cancelado
+                                {% elif pedido.estado == 'pagado' %}pedido-badge-pagado
+                                {% else %}pedido-badge-pendiente{% endif %}">
+                                <i class="fas 
+                                    {% if pedido.estado == 'cancelado' %}fa-times-circle
+                                    {% elif pedido.estado == 'pagado' %}fa-check-circle
+                                    {% else %}fa-clock{% endif %}"></i>
+                                <span class="badge-text">{{ pedido.estado|title }}</span>
+                            </span>
+                        </td>
+                        <td class="metodo-pago">
+                            <span class="pago-icon">
+                                <i class="fas 
+                                    {% if 'tarjeta' in pedido.metodo_pago|lower %}fa-credit-card
+                                    {% elif 'transferencia' in pedido.metodo_pago|lower %}fa-university
+                                    {% elif 'efectivo' in pedido.metodo_pago|lower %}fa-money-bill-wave
+                                    {% else %}fa-wallet{% endif %}"></i>
+                            </span>
+                            <span class="pago-text">{{ pedido.metodo_pago }}</span>
+                        </td>
+                        <td>
+                            <a href="{% url 'detalle_pedido' pedido.id %}" class="btn btn-sm pedido-btn-ver">
+                                <i class="fas fa-eye"></i> <span class="btn-text">Ver</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pedidos-summary mt-4">
+            <div class="summary-card animate__animated animate__fadeInLeft">
+                <div class="summary-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="summary-info">
+                    <span class="summary-value counter">{{ pedidos|length }}</span>
+                    <span class="summary-label">Total de Pedidos</span>
+                </div>
+            </div>
+            
+            <div class="summary-card animate__animated animate__fadeInRight">
+                <div class="summary-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="summary-info">
+                    <span class="summary-value">{{ pedidos|dictsortreversed:"fecha_creacion"|first|date:"d/m/Y" }}</span>
+                    <span class="summary-label">Último Pedido</span>
+                </div>
+            </div>
+            
+            <div class="summary-card animate__animated animate__fadeInUp">
+                <div class="summary-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="summary-info">
+                    <span class="summary-value counter">{{ pedidos|length }}</span>
+                    <span class="summary-label">Pedidos Completados</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pedidos-actions mt-4 animate__animated animate__fadeIn">
+            <a href="{% url 'catalogo' %}" class="btn pedido-btn-explorar">
+                <i class="fas fa-store"></i> Volver a la Tienda
+            </a>
+        </div>
+    {% else %}
+        <div class="pedidos-empty animate__animated animate__fadeIn">
+            <div class="empty-icon pulse">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h3>No tienes pedidos realizados aún</h3>
+            <p>Explora nuestro catálogo y realiza tu primer pedido</p>
+            <a href="{% url 'catalogo' %}" class="btn pedido-btn-explorar">
+                <i class="fas fa-store"></i> Explorar productos
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animación para las filas de la tabla
+        const pedidoRows = document.querySelectorAll('.pedido-row');
+        pedidoRows.forEach((row, index) => {
+            row.style.opacity = '0';
+            row.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                row.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                row.style.opacity = '1';
+                row.style.transform = 'translateY(0)';
+            }, 100 + (index * 50));
+        });
+        
+        // Filter functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Añadir efecto de clic
+                this.classList.add('btn-clicked');
+                setTimeout(() => {
+                    this.classList.remove('btn-clicked');
+                }, 300);
+                
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                
+                // Añadir animación al filtrar
+                pedidoRows.forEach(row => {
+                    row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    
+                    if (filter === 'all') {
+                        row.style.display = '';
+                        setTimeout(() => {
+                            row.style.opacity = '1';
+                            row.style.transform = 'translateY(0)';
+                        }, 50);
+                    } else {
+                        const estado = row.getAttribute('data-estado');
+                        if (estado === filter) {
+                            row.style.display = '';
+                            setTimeout(() => {
+                                row.style.opacity = '1';
+                                row.style.transform = 'translateY(0)';
+                            }, 50);
+                        } else {
+                            row.style.opacity = '0';
+                            row.style.transform = 'translateY(20px)';
+                            setTimeout(() => {
+                                row.style.display = 'none';
+                            }, 300);
+                        }
+                    }
+                });
+                
+                // Actualizar contador de resumen
+                updateSummary(filter);
+            });
+        });
+        
+        // Función para actualizar el resumen según el filtro
+        function updateSummary(filter) {
+            const totalPedidos = document.querySelectorAll('.pedido-row').length;
+            const pedidosFiltrados = filter === 'all' ? 
+                totalPedidos : 
+                document.querySelectorAll(`.pedido-row[data-estado="${filter}"]`).length;
+            
+            const summaryValues = document.querySelectorAll('.summary-value.counter');
+            summaryValues.forEach(value => {
+                // Animación de contador
+                const startValue = parseInt(value.textContent);
+                const endValue = filter === 'all' ? totalPedidos : pedidosFiltrados;
+                
+                let currentValue = startValue;
+                const duration = 500; // ms
+                const steps = 20;
+                const increment = (endValue - startValue) / steps;
+                
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if ((increment > 0 && currentValue >= endValue) || 
+                        (increment < 0 && currentValue <= endValue)) {
+                        clearInterval(timer);
+                        value.textContent = endValue;
+                    } else {
+                        value.textContent = Math.round(currentValue);
+                    }
+                }, duration / steps);
+            });
+        }
+        
+        // Efecto hover en las filas
+        pedidoRows.forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.classList.add('row-hover');
+            });
+            
+            row.addEventListener('mouseleave', function() {
+                this.classList.remove('row-hover');
+            });
+        });
+        
+        // Efecto de pulsación para los botones Ver
+        const verButtons = document.querySelectorAll('.pedido-btn-ver');
+        verButtons.forEach(button => {
+            button.addEventListener('mousedown', function() {
+                this.classList.add('btn-active');
+            });
+            
+            button.addEventListener('mouseup', function() {
+                this.classList.remove('btn-active');
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.classList.remove('btn-active');
+            });
+        });
+        
+        // Efecto de pulsación para el icono vacío
+        const emptyIcon = document.querySelector('.empty-icon');
+        if (emptyIcon) {
+            setInterval(() => {
+                emptyIcon.classList.add('pulse-animation');
+                setTimeout(() => {
+                    emptyIcon.classList.remove('pulse-animation');
+                }, 1000);
+            }, 2000);
+        }
+    });
+</script>
+
+<style>
+    /* Estilos adicionales para animaciones */
+    .btn-clicked {
+        transform: scale(0.95);
+    }
+    
+    .row-hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+        position: relative;
+    }
+    
+    .btn-active {
+        transform: scale(0.95);
+    }
+    
+    .pulse {
+        animation: pulse-animation 2s infinite;
+    }
+    
+    @keyframes pulse-animation {
+        0% {
+            box-shadow: 0 0 0 0 rgba(93, 130, 251, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 15px rgba(93, 130, 251, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(93, 130, 251, 0);
+        }
+    }
+    
+    .pulse-animation {
+        animation: pulse-scale 1s ease;
+    }
+    
+    @keyframes pulse-scale {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+    
+    /* Mejoras para dispositivos móviles */
+    @media (max-width: 768px) {
+        .fecha-completa {
+            display: none;
+        }
+        
+        .fecha-dia, .fecha-mes {
+            display: inline-block;
+        }
+        
+        .fecha-dia {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .btn-text {
+            display: none;
+        }
+        
+        .pago-text {
+            display: none;
+        }
+        
+        .badge-text {
+            display: none;
+        }
+        
+        .pedido-badge i {
+            margin-right: 0;
+        }
+    }
+    
+    @media (min-width: 769px) {
+        .fecha-dia, .fecha-mes {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}

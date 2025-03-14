@@ -1,0 +1,44 @@
+<!-- Reemplaza la sección del carrito vacío existente con este código -->
+<div class="text-center py-5 empty-cart">
+    <div class="cart-decoration cart-decoration-1">
+        <i class="fas fa-tag"></i>
+    </div>
+    <div class="cart-decoration cart-decoration-2">
+        <i class="fas fa-shopping-bag"></i>
+    </div>
+    <div class="cart-decoration cart-decoration-3">
+        <i class="fas fa-box"></i>
+    </div>
+    <div class="cart-decoration cart-decoration-4">
+        <i class="fas fa-gift"></i>
+    </div>
+    
+    <div class="empty-cart-icon-container">
+        <i class="fas fa-shopping-cart empty-cart-icon"></i>
+    </div>
+    
+    <h3>Tu carrito está vacío</h3>
+    <p>Parece que aún no has agregado productos a tu carrito. Descubre nuestros productos y comienza a llenar tu carrito.</p>
+    
+    <a href="{% url 'catalogo' %}" class="btn btn-shop-now">
+        <i class="fas fa-store"></i> Explorar productos
+    </a>
+    
+    <div class="empty-cart-suggestions">
+        <h4>¿Qué estás buscando?</h4>
+        <div class="suggestion-buttons">
+            <a href="{% url 'catalogo' %}?categoria=destacados" class="suggestion-btn">
+                <i class="fas fa-star"></i> Productos destacados
+            </a>
+            <a href="{% url 'catalogo' %}?categoria=nuevos" class="suggestion-btn">
+                <i class="fas fa-bolt"></i> Novedades
+            </a>
+            <a href="{% url 'catalogo' %}?categoria=ofertas" class="suggestion-btn">
+                <i class="fas fa-percentage"></i> Ofertas
+            </a>
+            <a href="{% url 'catalogo' %}" class="suggestion-btn">
+                <i class="fas fa-th-large"></i> Ver todo
+            </a>
+        </div>
+    </div>
+</div>

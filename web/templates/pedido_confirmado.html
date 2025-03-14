@@ -5,8 +5,14 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'confirmacion.css' %}">
+
 <div class="confirmacion-container">
-    <div class="confirmacion-icon">✅</div>
+    <div class="confirmacion-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 12l2 2 6-6"></path>
+        </svg>
+    </div>
     <h1 class="confirmacion-titulo">¡Pedido Confirmado!</h1>
 
     <div class="confirmacion-mensaje">
@@ -65,11 +71,6 @@
 </div>
 
 <script>
-    /**
- * Confirmación de Pedido - Animaciones JavaScript
- * Añade efectos visuales interactivos a la página de confirmación
- */
-
 document.addEventListener('DOMContentLoaded', function() {
     // Crear efecto de confeti al cargar la página
     createConfetti();
@@ -82,7 +83,40 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Añadir efecto de ondulación al botón
     setupButtonRippleEffect();
+    
+    // Añadir efecto de contador para el total
+    setupTotalCounter();
+    
+    // Añadir efecto de brillo al icono de confirmación
+    setupIconEffects();
+    
+    // Añadir efectos de scroll
+    setupScrollEffects();
+    
+    // Añadir clases especiales para mejorar el diseño
+    enhanceDesign();
 });
+
+/**
+ * Mejora el diseño añadiendo clases y elementos visuales
+ */
+function enhanceDesign() {
+    // Añadir badge al número de pedido
+    const ordenId = document.querySelector('.resumen-titulo');
+    if (ordenId) {
+        const text = ordenId.innerHTML;
+        const match = text.match(/#(\d+)/);
+        if (match) {
+            ordenId.innerHTML = text.replace(/#(\d+)/, '#<span class="order-number">$1</span>');
+        }
+    }
+    
+    // Añadir badge al método de pago
+    const metodoPago = document.querySelector('.confirmacion-datos div:nth-child(5) div:not(.datos-titulo)');
+    if (metodoPago) {
+        metodoPago.innerHTML = `<span class="payment-method-badge">${metodoPago.textContent}</span>`;
+    }
+}
 
 /**
  * Crea el efecto de confeti que cae desde la parte superior de la pantalla
@@ -170,7 +204,7 @@ function setupItemHoverEffects() {
     items.forEach(item => {
         item.addEventListener('mouseenter', function() {
             this.style.transition = 'all 0.3s ease';
-            this.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+            this.style.backgroundColor = 'rgba(93, 130, 251, 0.1)';
             this.style.transform = 'translateX(5px)';
             this.style.paddingLeft = '10px';
             this.style.borderRadius = '4px';
@@ -189,12 +223,12 @@ function setupItemHoverEffects() {
         total.addEventListener('mouseenter', function() {
             this.style.transition = 'all 0.3s ease';
             this.style.transform = 'scale(1.05)';
-            this.style.color = '#388E3C';
+            this.style.color = '#5d82fb';
         });
         
         total.addEventListener('mouseleave', function() {
             this.style.transform = 'scale(1)';
-            this.style.color = 'var(--color-success)';
+            this.style.color = '';
         });
     }
 }
@@ -239,7 +273,7 @@ function setupButtonRippleEffect() {
 /**
  * Añade un efecto de brillo al icono de confirmación cuando se hace clic
  */
-document.addEventListener('DOMContentLoaded', function() {
+function setupIconEffects() {
     const icon = document.querySelector('.confirmacion-icon');
     if (icon) {
         icon.addEventListener('click', function() {
@@ -248,34 +282,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.style.animation = 'glow 1s ease-in-out';
             }, 10);
             
+            // Animar el check dentro del SVG
+            const checkPath = this.querySelector('path');
+            if (checkPath) {
+                checkPath.style.strokeDasharray = '15';
+                checkPath.style.strokeDashoffset = '15';
+                checkPath.style.animation = 'drawCheck 0.5s linear forwards';
+            }
+            
             // Crear más confeti al hacer clic en el icono
             createConfetti();
         });
     }
-});
+}
 
 /**
  * Añade un efecto de desvanecimiento al desplazarse por la página
  */
-window.addEventListener('scroll', function() {
-    const scrollPosition = window.scrollY;
-    const elements = document.querySelectorAll('.confirmacion-detalles, .confirmacion-items');
-    
-    elements.forEach(element => {
-        const elementPosition = element.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
+function setupScrollEffects() {
+    window.addEventListener('scroll', function() {
+        const scrollPosition = window.scrollY;
+        const elements = document.querySelectorAll('.confirmacion-detalles, .confirmacion-items');
         
-        if (elementPosition < windowHeight * 0.8) {
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
-        }
+        elements.forEach(element => {
+            const elementPosition = element.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+            
+            if (elementPosition < windowHeight * 0.8) {
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }
+        });
     });
-});
+}
 
 /**
  * Añade un efecto de contador para el total
  */
-document.addEventListener('DOMContentLoaded', function() {
+function setupTotalCounter() {
     const totalElement = document.querySelector('.confirmacion-total');
     if (totalElement) {
         const totalText = totalElement.textContent;
@@ -290,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 2000);
         }
     }
-});
+}
 
 /**
  * Anima el contador del total
@@ -320,7 +364,6 @@ function animateTotal(element, start, end, duration) {
 function easeOutQuart(x) {
     return 1 - Math.pow(1 - x, 4);
 }
-
 </script>
 
 {% endblock %}

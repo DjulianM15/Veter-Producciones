@@ -1,12 +1,20 @@
-/* Importar fuente moderna */
+/* Importar fuentes modernas para DJ */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
 
 :root {
-    --primary-color: #6e8efb;
-    --secondary-color: #a777e3;
+    --primary-color: #93c5fd;
+    --secondary-color: #c4b5fd;
+    --accent-color: #ddd6fe;
+    --dj-primary: #4e9effb1;
+    --dj-secondary: #ac51daae;
+    --dj-accent: #9f28caba;
+    --text-dark: #1a365d;
     --text-light: #ffffff;
-    --background-glass: rgba(255, 255, 255, 0.15);
-    --border-glass: rgba(255, 255, 255, 0.25);
+    --background-glass: rgba(255, 255, 255, 0.85);
+    --border-glass: rgba(196, 181, 253, 0.3);
+    --nav-bg: rgba(147, 197, 253, 0.25);
+    --nav-bg-hover: rgba(196, 181, 253, 0.35);
 }
 
 * {
@@ -19,42 +27,167 @@
 
 /* Glassmorphism para la Navbar */
 .navbar {
-    backdrop-filter: blur(15px);
-    background: var(--background-glass);
-    border-bottom: 1px solid var(--border-glass);
-    transition: all 0.3s ease-in-out;
+    backdrop-filter: blur(12px);
+    background: linear-gradient(135deg, var(--nav-bg), rgba(196, 181, 253, 0.25));
+    border: 1px solid var(--border-glass);
+    transition: all 0.4s ease-in-out;
+    box-shadow: 0 4px 15px rgba(147, 197, 253, 0.2);
 }
 
 .navbar:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background: linear-gradient(135deg, var(--nav-bg-hover), rgba(196, 181, 253, 0.35));
+    box-shadow: 0 4px 20px rgba(196, 181, 253, 0.25);
+}
+
+.navbar-brand {
+    color: var(--text-light) !important;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    padding: 5px 10px;
+    border-radius: 12px;
+    transition: all 0.4s ease;
+}
+
+.navbar-brand:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(147, 197, 253, 0.15);
 }
 
 .navbar-brand span {
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    font-family: 'Audiowide', cursive;
+    background: linear-gradient(135deg, var(--dj-primary), var(--dj-secondary));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    text-shadow: none;
+    letter-spacing: 1px;
 }
+
+/* Nuevo logo de DJ con ecualizador */
+.navbar-logo {
+    position: relative;
+    width: 45px;
+    height: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 2px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 2px 5px rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.navbar-logo::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--dj-primary), var(--dj-secondary));
+    z-index: 2;
+    box-shadow: 0 0 10px rgba(0, 200, 255, 0.7);
+}
+
+.navbar-logo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, 
+                rgba(0, 200, 255, 0.1) 0%, 
+                rgba(255, 0, 204, 0.1) 100%);
+    z-index: 1;
+}
+
+.eq-bar {
+    width: 4px;
+    background: linear-gradient(180deg, var(--dj-primary), var(--dj-secondary));
+    border-radius: 2px;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 0 5px rgba(0, 200, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.eq-bar-1 { height: 15px; animation: eq1 1.2s infinite ease-in-out; }
+.eq-bar-2 { height: 25px; animation: eq2 1.4s infinite ease-in-out; }
+.eq-bar-3 { height: 20px; animation: eq3 1.0s infinite ease-in-out; }
+.eq-bar-4 { height: 30px; animation: eq4 1.6s infinite ease-in-out; }
+.eq-bar-5 { height: 18px; animation: eq5 1.3s infinite ease-in-out; }
+
+@keyframes eq1 {
+    0%, 100% { height: 15px; }
+    50% { height: 30px; }
+}
+
+@keyframes eq2 {
+    0%, 100% { height: 25px; }
+    50% { height: 10px; }
+}
+
+@keyframes eq3 {
+    0%, 100% { height: 20px; }
+    50% { height: 35px; }
+}
+
+@keyframes eq4 {
+    0%, 100% { height: 30px; }
+    50% { height: 15px; }
+}
+
+@keyframes eq5 {
+    0%, 100% { height: 18px; }
+    50% { height: 28px; }
+}
+
+.navbar-brand:hover .navbar-logo {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.2);
+}
+
+.navbar-brand:hover .eq-bar {
+    box-shadow: 0 0 15px rgba(0, 200, 255, 0.8);
+}
+
+.navbar-brand:hover .eq-bar-1 { animation: eq1 0.6s infinite ease-in-out; }
+.navbar-brand:hover .eq-bar-2 { animation: eq2 0.7s infinite ease-in-out; }
+.navbar-brand:hover .eq-bar-3 { animation: eq3 0.5s infinite ease-in-out; }
+.navbar-brand:hover .eq-bar-4 { animation: eq4 0.8s infinite ease-in-out; }
+.navbar-brand:hover .eq-bar-5 { animation: eq5 0.65s infinite ease-in-out; }
 
 /* Efectos Hover en Enlaces */
 .nav-link {
     color: var(--text-light) !important;
-    font-weight: 600;
+    font-weight: 500;
     position: relative;
     overflow: hidden;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.nav-link:hover {
+    color: var(--text-light) !important;
+    transform: translateY(-1px);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .nav-link::before {
     content: '';
     position: absolute;
     width: 0%;
-    height: 3px;
+    height: 2px;
     bottom: -2px;
     left: 50%;
-    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--dj-primary), var(--dj-secondary));
     transition: all 0.3s ease-in-out;
     transform: translateX(-50%);
+    box-shadow: 0 0 10px rgba(147, 197, 253, 0.5);
 }
 
 .nav-link:hover::before {
@@ -64,11 +197,48 @@
 /* Animación del Carrito */
 .fa-shopping-cart {
     font-size: 1.5rem;
-    transition: transform 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    color: var(--text-light);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .nav-link:hover .fa-shopping-cart {
     transform: scale(1.1) rotate(-5deg);
+    color: var(--dj-primary);
+}
+
+/* Badge en el carrito */
+.badge.bg-danger {
+    background: linear-gradient(135deg, var(--dj-primary), var(--dj-secondary)) !important;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transform: scale(0.9);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(147, 197, 253, 0.3);
+}
+
+.nav-link:hover .badge.bg-danger {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(196, 181, 253, 0.4);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    background: rgba(147, 197, 253, 0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-glass);
+    box-shadow: 0 4px 15px rgba(147, 197, 253, 0.2);
+}
+
+.dropdown-item {
+    color: var(--text-light);
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-item:hover {
+    background: rgba(196, 181, 253, 0.25);
+    color: var(--text-light);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Animación flotante para Redes Sociales */
@@ -77,38 +247,42 @@
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Efecto Glassmorphism para el Footer */
-footer {
-    background: rgba(0, 0, 0, 0.8);
-    color: var(--text-light);
-    text-align: center;
-    padding: 30px 0;
-    backdrop-filter: blur(10px);
-}
-
-/* Botón de WhatsApp con Animación */
+/* Botón de WhatsApp Flotante */
 .whatsapp-float {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
+    width: 60px;
+    height: 60px;
+    bottom: 40px;
+    right: 40px;
     z-index: 1000;
-    transition: transform 0.3s ease-in-out;
-    animation: whatsappBounce 2s infinite;
-    filter: drop-shadow(0 0 10px rgba(37, 211, 102, 0.3));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
 }
 
-@keyframes whatsappBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
+.whatsapp-float img {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 4px 8px rgba(50, 236, 118, 0.3));
+    transition: all 0.3s ease-in-out;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1) translateY(-5px);
+}
+
+.whatsapp-float:hover img {
+    filter: drop-shadow(0 6px 12px rgba(48, 248, 121, 0.5));
 }
 
 /* Personalización de Scroll */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 2px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--dj-primary), var(--dj-secondary));
     border-radius: 4px;
 }
 
@@ -123,48 +297,412 @@ footer {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-
-/* WhatsApp Button */
-.whatsapp-float {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-.whatsapp-float img {
-    width: 50px;
-    height: 50px;
-    transition: transform 0.3s ease-in-out;
-}
-.whatsapp-float img:hover {
-    transform: scale(1.1);
+footer {
+    background: linear-gradient(135deg, rgba(26, 32, 44, 0.9), rgba(45, 55, 72, 0.9));
+    backdrop-filter: blur(10px);
+    color: var(--text-light);
+    padding: 4rem 0 2rem;
+    position: relative;
+    margin-top: 0; /* Changed from 6rem to 0 to remove the gap */
+    border-top: 1px solid var(--border-glass);
+    box-shadow: 0 -10px 25px rgba(147, 197, 253, 0.15);
 }
 
-/* Footer */
+footer .container {
+    position: relative;
+    z-index: 1;
+}
+
+footer .footer-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    height: 100%;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+footer .footer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(147, 197, 253, 0.2);
+    border-color: rgba(196, 181, 253, 0.3);
+}
 
 footer h5 {
-    font-weight: bold;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
+    background: linear-gradient(135deg, var(--dj-primary), var(--dj-secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 0.5px;
 }
+
+footer h5::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(135deg, var(--dj-primary), var(--dj-secondary));
+    border-radius: 3px;
+    box-shadow: 0 2px 5px rgba(147, 197, 253, 0.3);
+}
+
+footer p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    transition: color 0.3s ease;
+}
+
 footer a {
-    color: #c89600;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
     text-decoration: none;
+    display: block;
+    margin-bottom: 0.8rem;
+    position: relative;
+    padding-left: 1.2rem;
 }
+
 footer a:hover {
+    color: var(--dj-primary) !important;
+    transform: translateX(5px);
+}
+
+footer a::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+footer a:hover::before {
+    opacity: 1;
+    color: var(--dj-primary);
+}
+
+footer .social-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 1.5rem;
+}
+
+footer .social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-right: 0;
+    padding-left: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+footer .social-links a:hover {
+    background: linear-gradient(135deg, var(--dj-primary), var(--dj-secondary));
+    transform: translateY(-5px) rotate(360deg);
+    box-shadow: 0 6px 15px rgba(147, 197, 253, 0.3);
+}
+
+footer .social-links a i {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+footer .social-links a:hover i {
+    color: white;
+}
+
+footer hr {
+    border-color: rgba(255, 255, 255, 0.1);
+    margin: 2.5rem 0 1.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+footer .contact-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+footer .contact-info i {
+    color: var(--dj-primary);
+    margin-right: 12px;
+    font-size: 1.2rem;
+    width: 20px;
+    text-align: center;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+footer .copyright {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+footer .copyright a {
+    color: var(--dj-primary);
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+footer .copyright a:hover {
+    transform: none;
     text-decoration: underline;
 }
 
-/* Social Media */
-.social-media-container {
+footer .footer-logo {
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+footer .footer-logo img {
+    height: 50px;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
+    transition: all 0.3s ease;
+}
+
+footer .footer-logo:hover img {
+    transform: scale(1.05);
+    filter: drop-shadow(0 4px 8px rgba(147, 197, 253, 0.4));
+}
+
+/* Newsletter Form */
+footer .newsletter-form {
+    position: relative;
+    margin-top: 1.5rem;
+}
+
+footer .newsletter-form input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    color: white;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+footer .newsletter-form input:focus {
+    outline: none;
+    border-color: var(--dj-primary);
+    box-shadow: 0 0 15px rgba(147, 197, 253, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+footer .newsletter-form button {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    bottom: 5px;
+    border: none;
+    background: linear-gradient(135deg, var(--dj-primary), var(--dj-secondary));
+    color: white;
+    border-radius: 25px;
+    padding: 0 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+footer .newsletter-form button:hover {
+    transform: translateX(3px);
+    box-shadow: 0 0 15px rgba(147, 197, 253, 0.4);
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    footer {
+        padding-bottom: 5rem; /* Extra space for WhatsApp button */
+    }
+    
+    footer h5 {
+        margin-top: 1.5rem;
+    }
+    
+    footer h5::after {
+        left: 0;
+        transform: none;
+    }
+    
+    footer .footer-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    footer .social-links {
+        justify-content: center;
+    }
+    
+    footer .copyright {
+        margin-top: 1rem;
+    }
+}
+
+/* WhatsApp Float Button - Enhanced & Modernized */
+.whatsapp-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    background: linear-gradient(145deg, #25d366, #128C7E);
+    color: white;
+    border-radius: 50%;
+    width: 65px;
+    height: 65px;
     display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 15px;
-    margin-top: 10px;
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    overflow: hidden;
 }
-.social-icon-wrapper img {
-    width: 40px;
-    height: 40px;
-    transition: transform 0.3s;
+
+/* Tooltip for WhatsApp button */
+.whatsapp-float::after {
+    content: 'Contáctanos';
+    position: absolute;
+    right: 80px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
 }
-.social-icon-wrapper img:hover {
-    transform: scale(1.2);
+
+/* Pulse effect container */
+.whatsapp-float::before {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+    background: rgba(37, 211, 102, 0.25);
+    z-index: -1;
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+/* Inner glow effect */
+.whatsapp-float .inner-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+/* Hover effects */
+.whatsapp-float:hover {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.6);
+    background: linear-gradient(145deg, #2ade6f, #0fa36b);
+}
+
+.whatsapp-float:hover::before {
+    opacity: 1;
+    animation: whatsapp-pulse 2s infinite;
+}
+
+.whatsapp-float:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.whatsapp-float:hover .inner-glow {
+    opacity: 1;
+}
+
+.whatsapp-float:active {
+    transform: scale(0.95) translateY(0);
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+}
+
+/* WhatsApp icon styling */
+.whatsapp-float img {
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.whatsapp-float:hover img {
+    transform: rotate(-10deg) scale(1.1);
+    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.3)) brightness(1.1);
+}
+
+/* Pulse animation */
+@keyframes whatsapp-pulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+    70% {
+        transform: scale(1.1);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+    .whatsapp-float {
+        width: 55px;
+        height: 55px;
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .whatsapp-float img {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .whatsapp-float::after {
+        display: none; /* Hide tooltip on mobile */
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+    70% {
+        transform: scale(1.1);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
 }

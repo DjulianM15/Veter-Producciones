@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
 {% block title %}Carrito de Compras{% endblock %}
 {% load static %}
+{% load humanize %}
 
 {% block content %}
-
 <link rel="stylesheet" href="{% static 'carrito.css' %}">
 
-<div class="container mt-5">
-    <h2 class="mb-4">Arquiler De Productos</h2>
+<div class="container py-5 mt-5">
+    <h1 class="text-center mb-5">Tu Pedidos</h1>
     
     {% if messages %}
-    <div class="messages mb-4">
+    <div class="messages">
         {% for message in messages %}
-        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
             {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endfor %}
     </div>
@@ -33,35 +34,28 @@
                 </thead>
                 <tbody>
                     {% for item in items_carrito %}
-                    <tr data-item-id="{{ item.id }}">
+                    <tr id="item-{{ item.id }}">
                         <td>
                             <div class="d-flex align-items-center">
-                                <img src="{{ item.catalogo.foto.url }}" alt="{{ item.catalogo.nombre }}" class="img-thumbnail me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                <img src="{{ item.catalogo.foto.url }}" alt="{{ item.catalogo.nombre }}" class="img-thumbnail me-3" style="width: 60px; height: 60px; object-fit: cover;">
                                 <span>{{ item.catalogo.nombre }}</span>
                             </div>
                         </td>
-                        <td>${{ item.catalogo.precio }}</td>
+                        <td>${{ item.catalogo.precio|floatformat:0|intcomma }}</td>
                         <td>
-                            <div class="quantity-control d-flex align-items-center">
-                                <button class="btn btn-sm btn-outline-secondary me-2" 
-                                        onclick="actualizarCantidad({{ item.id }}, {{ item.cantidad|add:'-1' }})">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <input type="number" min="1" value="{{ item.cantidad }}" 
-                                       class="form-control form-control-sm text-center" 
-                                       style="width: 60px;"
+                            <div class="input-group" style="width: 120px;">
+                                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="cambiarCantidad({{ item.id }}, -1)">-</button>
+                                <input type="number" class="form-control form-control-sm text-center cantidad-input" 
+                                       value="{{ item.cantidad }}" min="1" data-item-id="{{ item.id }}"
                                        onchange="actualizarCantidad({{ item.id }}, this.value)">
-                                <button class="btn btn-sm btn-outline-secondary ms-2" 
-                                        onclick="actualizarCantidad({{ item.id }}, {{ item.cantidad|add:'1' }})">
-                                    <i class="fas fa-plus"></i>
-                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="cambiarCantidad({{ item.id }}, 1)">+</button>
                             </div>
                         </td>
-                        <td>${{ item.subtotal }}</td>
+                        <td class="subtotal-cell">${{ item.subtotal|floatformat:0|intcomma }}</td>
                         <td>
-                            <a href="{% url 'eliminar_item' item.id %}" class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash-alt"></i> Eliminar
-                            </a>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmarEliminar({{ item.id }}, '{{ item.catalogo.nombre }}')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -69,40 +63,79 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                        <td colspan="2"><strong>${{ total }}</strong></td>
+                        <td id="total-cart">${{ total|floatformat:0|intcomma }}</td>
+                        <td></td>
                     </tr>
                 </tfoot>
             </table>
         </div>
         
         <div class="d-flex justify-content-between mt-4">
-            <a href="{% url 'catalogo' %}" class="btn btn-primary">
-                <i class="fas fa-arrow-left me-2"></i>Seguir comprando
+            <a href="{% url 'catalogo' %}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-2"></i>Seguir Comprando
             </a>
-            
-            <a href="{% url 'finalizar_compra' %}" class="btn btn-success">
-                Proceder al pago <i class="fas fa-arrow-right ms-2"></i>
+            <a href="{% url 'finalizar_compra' %}" class="btn btn-primary">
+                Finalizar Compra<i class="fas fa-arrow-right ms-2"></i>
             </a>
         </div>
     {% else %}
-        <div class="alert alert-info">
-            <p class="mb-3">Tu carrito está vacío.</p>
-            <a href="{% url 'catalogo' %}" class="btn btn-primary">
-                <i class="fas fa-shopping-cart me-2"></i>Ver productos
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-4x mb-3 text-muted"></i>
+            <h3>Tu carrito está vacío</h3>
+            <p class="text-muted">Parece que aún no has agregado productos a tu carrito.</p>
+            <a href="{% url 'catalogo' %}" class="btn btn-primary shop-btn">
+                <i class="fas fa-shopping-cart"></i> Ir a la tienda
             </a>
         </div>
     {% endif %}
 </div>
 
-<script>
-    function actualizarCantidad(itemId, nuevaCantidad) {
-        if (nuevaCantidad < 1) nuevaCantidad = 1;
+<!-- Hidden form for delete -->
+<form id="delete-form" method="post" style="display: none;">
+    {% csrf_token %}
+</form>
 
+{% csrf_token %}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function cambiarCantidad(itemId, delta) {
+        const input = document.querySelector(`input[data-item-id="${itemId}"]`);
+        let newValue = parseInt(input.value) + delta;
+        if (newValue < 1) newValue = 1;
+        input.value = newValue;
+        actualizarCantidad(itemId, newValue);
+    }
+
+    function formatNumber(number) {
+        return new Intl.NumberFormat('es-CO').format(number);
+    }
+
+    function actualizarCantidad(itemId, cantidad) {
+        const csrftoken = getCookie('csrftoken');
+        
+        // Crear FormData
         const formData = new FormData();
         formData.append('item_id', itemId);
-        formData.append('cantidad', nuevaCantidad);
-        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-
+        formData.append('cantidad', cantidad);
+        formData.append('csrfmiddlewaretoken', csrftoken);
+        
+        // Realizar petición AJAX
         fetch('{% url "actualizar_cantidad" %}', {
             method: 'POST',
             body: formData,
@@ -110,38 +143,103 @@
                 'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
-                // Animación de actualización
-                const row = document.querySelector(`tr[data-item-id="${itemId}"]`);
-                if (row) {
-                    row.classList.add('fade-in');
-                    setTimeout(() => {
-                        row.classList.remove('fade-in');
-                        location.reload();
-                    }, 500);
-                }
+                // Actualizar subtotal del item
+                const subtotalCell = document.querySelector(`#item-${itemId} .subtotal-cell`);
+                subtotalCell.textContent = '$' + formatNumber(parseFloat(data.subtotal).toFixed(0));
+                
+                // Actualizar total del carrito
+                const totalCart = document.getElementById('total-cart');
+                totalCart.textContent = '$' + formatNumber(parseFloat(data.total).toFixed(0));
             } else {
-                alert('Error: ' + data.error);
+                console.error('Error:', data.error);
+                alert('Error al actualizar: ' + data.error);
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error al procesar la solicitud');
+            alert('Error al actualizar la cantidad');
         });
     }
-
-    // Animación al eliminar un producto
-    document.querySelectorAll('.btn-danger').forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            const row = button.closest('tr');
-            row.style.animation = 'fadeOut 0.5s ease';
-            setTimeout(() => {
-                window.location.href = button.href;
-            }, 500);
+    
+    function confirmarEliminar(itemId, nombreProducto) {
+        Swal.fire({
+            title: '¿Eliminar producto?',
+            text: `¿Estás seguro de que deseas eliminar "${nombreProducto}" de tu carrito?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                eliminarItem(itemId);
+            }
         });
-    });
+    }
+    
+    function eliminarItem(itemId) {
+        const csrftoken = getCookie('csrftoken');
+        
+        // Realizar petición AJAX para eliminar
+        fetch(`{% url "eliminar_item" 0 %}`.replace('0', itemId), {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Eliminar la fila de la tabla
+                document.getElementById(`item-${itemId}`).remove();
+                
+                // Actualizar el total
+                const totalCart = document.getElementById('total-cart');
+                totalCart.textContent = '$' + formatNumber(parseFloat(data.total).toFixed(0));
+                
+                // Mostrar mensaje de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Producto eliminado!',
+                    text: 'El producto ha sido eliminado de tu carrito',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                
+                // Si el carrito está vacío, recargar la página para mostrar el mensaje de carrito vacío
+                if (data.cart_empty) {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                }
+            } else {
+                throw new Error(data.error || 'Error al eliminar el producto');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Ha ocurrido un error al eliminar el producto',
+                confirmButtonText: 'Aceptar'
+            });
+        });
+    }
 </script>
 {% endblock %}

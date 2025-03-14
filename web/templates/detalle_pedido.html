@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalle de Pedido #{{ pedido.id }} - Veter Producciones{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'detalle_pedido.css' %}">
+
+<div class="container pedidos-container" style="margin-top: 120px; margin-bottom: 50px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="pedidos-title">Detalle del Pedido #{{ pedido.id }}</h2>
+        <a href="{% url 'historial_pedidos' %}" class="btn pedido-btn-volver">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
+    </div>
+    
+    <div class="card pedido-detalle-card mb-4">
+        <div class="card-header pedido-detalle-header">
+            <h5><i class="fas fa-info-circle"></i> Información del Pedido</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="cliente-info-row">
+                        <p><span class="cliente-info-label"><i class="fas fa-user"></i> Nombre:</span> {{ pedido.nombre }}</p>
+                        <p><span class="cliente-info-label"><i class="fas fa-envelope"></i> Email:</span> {{ pedido.email }}</p>
+                        <p><span class="cliente-info-label"><i class="fas fa-phone"></i> Teléfono:</span> {{ pedido.telefono }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="cliente-info-row">
+                        <p><span class="cliente-info-label"><i class="fas fa-calendar-alt"></i> Fecha:</span> {{ pedido.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                        <p>
+                            <span class="cliente-info-label"><i class="fas fa-tag"></i> Estado:</span> 
+                            <span class="badge pedido-badge 
+                                {% if pedido.estado == 'cancelado' %}pedido-badge-cancelado
+                                {% elif pedido.estado == 'pagado' %}pedido-badge-pagado
+                                {% else %}pedido-badge-pendiente{% endif %}">
+                                {{ pedido.estado|title }}
+                            </span>
+                        </p>
+                        <p><span class="cliente-info-label"><i class="fas fa-credit-card"></i> Método de Pago:</span> {{ pedido.metodo_pago }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card pedido-detalle-card">
+        <div class="card-header pedido-detalle-header">
+            <h5><i class="fas fa-shopping-cart"></i> Productos</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped pedido-detalle-table">
+                    <thead class="pedido-detalle-thead">
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in pedido.items.all %}
+                        <tr>
+                            <td>{{ item.catalogo.nombre }}</td>
+                            <td>{{ item.cantidad }}</td>
+                            <td>${{ item.precio|floatformat:0 }}</td>
+                            <td>${{ item.subtotal|floatformat:0 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                            <td><strong>${{ pedido.total|floatformat:0 }}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    {% if pedido.estado != 'pagado' and pedido.estado != 'cancelado' and pedido.estado != 'completado' %}
+    <div class="text-end mt-4">
+        <a href="{% url 'cancelar_pedido' pedido.id %}" class="btn pedido-btn-cancelar">
+            <i class="fas fa-times"></i> Cancelar Pedido
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
