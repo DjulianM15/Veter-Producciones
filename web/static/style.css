@@ -180,11 +180,153 @@ header::before {
     .social-icon { width: 40px; height: 40px; }
     .social-icon i { font-size: 1.2rem; }
     .cta-button { padding: 10px 20px; }
+    
+    /* Ajustes para el menú en pantallas medianas */
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .navbar .container {
+        padding: 0 10px;
+    }
+    
+    .nav-link {
+        padding: 0.5rem 0.7rem;
+    }
 }
 
+@media (max-width: 576px) {
+    .social-icons { gap: 15px; }
+    .social-icon { width: 35px; height: 35px; }
+    .social-icon i { font-size: 1.1rem; }
+    .cta-button { padding: 9px 18px; font-size: 0.95rem; }
+    
+    /* Ajustes para el menú en pantallas pequeñas */
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+    
+    .navbar-toggler {
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .navbar .container {
+        padding: 0 5px;
+    }
+}
+
+/* Solución específica para el problema a 394px x 594px */
 @media (max-width: 480px) {
     .social-icons { gap: 10px; }
     .cta-button { padding: 8px 16px; font-size: 0.9rem; }
+    
+    /* Ajustes críticos para el menú */
+    .navbar-brand {
+        font-size: 1rem;
+        max-width: none; /* Cambiado de 180px para evitar truncamiento */
+        white-space: nowrap;
+        overflow: visible; /* Cambiado de hidden para evitar truncamiento */
+        text-overflow: clip; /* Cambiado de ellipsis */
+    }
+    
+    .navbar-logo {
+        transform: scale(0.8);
+        margin-right: 5px;
+    }
+    
+    .eq-bar {
+        margin: 0 1px;
+    }
+    
+    .navbar-toggler {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.9rem;
+    }
+    
+    .navbar .container {
+        padding: 0;
+    }
+    
+    .nav-link {
+        padding: 0.4rem 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .dropdown-menu {
+        min-width: auto;
+    }
+    
+    .dropdown-item {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Mover el menú más a la izquierda */
+    .navbar-nav {
+        margin-left: -10px;
+    }
+}
+
+/* Ajustes específicos para el rango problemático 394px-420px */
+@media (min-width: 390px) and (max-width: 420px) {
+    .navbar-brand {
+        font-size: 0.9rem;
+        letter-spacing: -0.5px;
+    }
+    
+    .navbar-toggler {
+        padding: 0.15rem 0.35rem;
+    }
+    
+    /* Ajustar el logo animado */
+    .navbar-logo {
+        transform: scale(0.7);
+        margin-right: 3px;
+    }
+    
+    /* Reducir el espacio entre los elementos del menú cuando está expandido */
+    .navbar-nav .nav-item {
+        margin-right: 0;
+    }
+}
+
+/* Solución específica para 388px y pantallas más pequeñas */
+@media (max-width: 389px) {
+    .navbar-brand {
+        font-size: 0.8rem; /* Reducir aún más el tamaño de fuente */
+        letter-spacing: -0.7px; /* Comprimir más las letras */
+        transform-origin: left center;
+        padding-right: 0; /* Eliminar padding innecesario */
+        margin-right: 5px; /* Reducir el margen derecho */
+        width: auto; /* Asegurar que el ancho se ajuste al contenido */
+    }
+    
+    .navbar-logo {
+        transform: scale(0.6); /* Reducir más el tamaño del logo */
+        margin-right: 2px; /* Reducir el espacio entre el logo y el texto */
+    }
+    
+    .eq-bar {
+        width: 1.8px; /* Barras más delgadas */
+        margin: 0 0.5px; /* Menos espacio entre barras */
+    }
+    
+    /* Mover el menú más a la izquierda */
+    .navbar-nav {
+        margin-left: -15px;
+    }
+    
+    /* Reducir el tamaño del botón toggler */
+    .navbar-toggler {
+        padding: 0.1rem 0.3rem;
+        font-size: 0.85rem;
+    }
+    
+    /* Ajustar el contenedor del navbar */
+    .navbar .container {
+        padding: 0;
+        margin: 0 5px; /* Añadir un pequeño margen horizontal */
+    }
 }
 
 /* Modo de accesibilidad */

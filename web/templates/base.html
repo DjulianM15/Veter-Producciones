@@ -82,7 +82,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://www.example.com/manual.pdf" target="_blank">
+                        <!-- Fixed manual link to use the correct filename -->
+                        <a class="nav-link" href="{{ STATIC_URL }}docs/Manual_de_usuario.pdf" target="_blank">
                             <i class="fas fa-book"></i> Manual
                         </a>
                     </li>
@@ -106,8 +107,8 @@
                     </a>
                     <p>Proporcionamos soluciones profesionales en sonido e iluminación para tus eventos. ¡Haz que cada momento sea inolvidable!</p>
                     <div class="social-links">
-                        <a href="https://facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/vetereventos" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/djvetermunoz/" target="_blank"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
@@ -166,5 +167,45 @@
 </a>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Script para corregir problemas de responsividad del navbar -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Referencia al navbar y sus elementos
+    const navbar = document.querySelector('.navbar');
+    const navbarBrand = document.querySelector('.navbar-brand');
+    const eqBars = document.querySelectorAll('.eq-bar');
+    
+    // Ajuste para dispositivos móviles
+    function checkScreenSize() {
+        if (window.innerWidth <= 389) {
+            // En pantallas muy pequeñas, simplificar el logo
+            if (!navbarBrand.hasAttribute('data-original')) {
+                navbarBrand.setAttribute('data-original', navbarBrand.innerHTML);
+                
+                // Mantener solo el logo y "Veter"
+                const logoElement = navbarBrand.querySelector('.navbar-logo');
+                const primaryText = navbarBrand.querySelector('.text-primary');
+                
+                if (logoElement && primaryText) {
+                    navbarBrand.innerHTML = '';
+                    navbarBrand.appendChild(logoElement);
+                    navbarBrand.appendChild(primaryText);
+                }
+            }
+        } else {
+            // Restaurar el contenido original en pantallas más grandes
+            if (navbarBrand.hasAttribute('data-original')) {
+                navbarBrand.innerHTML = navbarBrand.getAttribute('data-original');
+                navbarBrand.removeAttribute('data-original');
+            }
+        }
+    }
+    
+    // Verificar al cargar y al cambiar el tamaño de la ventana
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+});
+</script>
 </body>
 </html>

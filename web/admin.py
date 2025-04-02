@@ -27,22 +27,12 @@ class OrdenAdmin(admin.ModelAdmin):
     search_fields = ['nombre', 'email', 'telefono']
     inlines = [OrdenItemInline]
     list_editable = ['estado']
-    actions = ['marcar_como_procesando', 'marcar_como_enviado', 'marcar_como_entregado', 'marcar_como_cancelado']
+    actions = ['marcar_como_pagado', 'marcar_como_cancelado']
     
-    def marcar_como_procesando(self, request, queryset):
-        queryset.update(estado='procesando')
-        self.message_user(request, f"{queryset.count()} pedidos marcados como en procesamiento.")
-    marcar_como_procesando.short_description = "Marcar pedidos como en procesamiento"
-    
-    def marcar_como_enviado(self, request, queryset):
-        queryset.update(estado='enviado')
-        self.message_user(request, f"{queryset.count()} pedidos marcados como enviados.")
-    marcar_como_enviado.short_description = "Marcar pedidos como enviados"
-    
-    def marcar_como_entregado(self, request, queryset):
-        queryset.update(estado='entregado')
-        self.message_user(request, f"{queryset.count()} pedidos marcados como entregados.")
-    marcar_como_entregado.short_description = "Marcar pedidos como entregados"
+    def marcar_como_pagado(self, request, queryset):
+        queryset.update(estado='pagado')
+        self.message_user(request, f"{queryset.count()} pedidos marcados como pagados.")
+    marcar_como_pagado.short_description = "Marcar pedidos como pagados"
     
     def marcar_como_cancelado(self, request, queryset):
         queryset.update(estado='cancelado')
@@ -52,3 +42,4 @@ class OrdenAdmin(admin.ModelAdmin):
 # Registrar otros modelos
 admin.site.register(CarritoItem)
 admin.site.register(Datos)
+

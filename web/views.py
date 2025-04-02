@@ -123,11 +123,16 @@ def restablecer(request):
             try:
                 token = default_token_generator.make_token(user)
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
-                enlace = request.build_absolute_uri(f"/cambiar_contraseña/{uid}/{token}/")
+                
+                # Use reverse to generate the correct URL based on your urls.py
+                from django.urls import reverse
+                reset_url = reverse('recuperarc', kwargs={'uidb64': uid, 'token': token})
+                enlace = request.build_absolute_uri(reset_url)
+                
                 send_mail(
                     "Restablecimiento de contraseña",
                     f"Haz clic en el siguiente enlace para cambiar tu contraseña: {enlace}",
-                    "munozjulian146@gmail.com",
+                    "senaproyecto362@gmail.com",
                     [email],
                     fail_silently=False,
                 )
@@ -140,6 +145,7 @@ def restablecer(request):
             messages.error(request, "No se encontró un usuario con ese correo electrónico.")
             return redirect("restablecer")
     return render(request, "restablecer.html")
+
 
 def recuperarc(request, uidb64, token):
     try:
@@ -614,8 +620,8 @@ def contacto(request):
             send_mail(
                 subject=f'Nuevo mensaje de contacto de {nombre}',
                 message=f'De: {nombre}\nEmail: {email}\nMensaje: {mensaje}',
-                from_email='munozjulian146@gmail.com',
-                recipient_list=['munozjulian146@gmail.com'],
+                from_email='senaproyecto362@gmail.com',
+                recipient_list=['senaproyecto362@gmail.com'],
                 fail_silently=False,
             )
             
@@ -623,7 +629,7 @@ def contacto(request):
             send_mail(
                 subject='Confirmación de mensaje recibido',
                 message=f'Hola {nombre},\n\nGracias por contactarnos. Hemos recibido tu mensaje y nos pondremos en contacto contigo lo antes posible.\n\nResumen de tu mensaje:\n{mensaje}\n\nSaludos cordiales,\nEl equipo de soporte',
-                from_email='munozjulian146@gmail.com',
+                from_email='senaproyecto362@gmail.com',
                 recipient_list=[email],
                 fail_silently=False,
             )
@@ -648,7 +654,7 @@ def enviar_correo_confirmacion(orden):
     subject = f'Confirmación de tu pedido #{orden.id}'
     html_message = render_to_string('email_confirmacion.html', {'orden': orden})
     plain_message = strip_tags(html_message)
-    from_email = 'munozjulian146@gmail.com'
+    from_email = 'senaproyecto362@gmail.com'
     to_email = orden.email
 
     send_mail(

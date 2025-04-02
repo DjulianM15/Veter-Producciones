@@ -19,5 +19,85 @@
 </header>
 
 
+<script>
 
+    // Script para mejorar la interactividad del navbar
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Referencia al navbar y sus elementos
+    const navbar = document.querySelector('.navbar');
+    const navbarBrand = document.querySelector('.navbar-brand');
+    const eqBars = document.querySelectorAll('.eq-bar');
+    
+    // Función para activar animación del ecualizador al hacer hover
+    navbarBrand.addEventListener('mouseenter', function() {
+        eqBars.forEach(bar => {
+            // Reiniciar la animación para que sea más notoria
+            bar.style.animation = 'none';
+            setTimeout(() => {
+                // Aplicar animaciones más rápidas al hacer hover
+                if (bar.classList.contains('eq-bar-1')) bar.style.animation = 'eq1 0.7s ease-in-out infinite';
+                if (bar.classList.contains('eq-bar-2')) bar.style.animation = 'eq2 0.8s ease-in-out infinite';
+                if (bar.classList.contains('eq-bar-3')) bar.style.animation = 'eq3 0.6s ease-in-out infinite';
+                if (bar.classList.contains('eq-bar-4')) bar.style.animation = 'eq4 0.9s ease-in-out infinite';
+                if (bar.classList.contains('eq-bar-5')) bar.style.animation = 'eq5 0.7s ease-in-out infinite';
+            }, 10);
+        });
+    });
+    
+    // Restaurar animaciones originales al quitar el hover
+    navbarBrand.addEventListener('mouseleave', function() {
+        eqBars.forEach(bar => {
+            bar.style.animation = 'none';
+            setTimeout(() => {
+                if (bar.classList.contains('eq-bar-1')) bar.style.animation = 'eq1 1.2s ease-in-out infinite';
+                if (bar.classList.contains('eq-bar-2')) bar.style.animation = 'eq2 1.4s ease-in-out infinite';
+                if (bar.classList.contains('eq-bar-3')) bar.style.animation = 'eq3 1.0s ease-in-out infinite';
+                if (bar.classList.contains('eq-bar-4')) bar.style.animation = 'eq4 1.6s ease-in-out infinite';
+                if (bar.classList.contains('eq-bar-5')) bar.style.animation = 'eq5 1.3s ease-in-out infinite';
+            }, 10);
+        });
+    });
+    
+    // Cambiar apariencia del navbar al hacer scroll
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+            navbar.classList.add('navbar-scrolled');
+        } else {
+            navbar.classList.remove('navbar-scrolled');
+        }
+    });
+    
+    // Ajuste para dispositivos móviles
+    function checkScreenSize() {
+        const brandText = document.querySelector('.navbar-brand');
+        if (window.innerWidth <= 389) {
+            // En pantallas muy pequeñas, simplificar el logo
+            if (!brandText.hasAttribute('data-original')) {
+                brandText.setAttribute('data-original', brandText.innerHTML);
+                
+                // Mantener solo el logo y "Veter"
+                const logoElement = brandText.querySelector('.navbar-logo');
+                const primaryText = brandText.querySelector('.text-primary');
+                
+                if (logoElement && primaryText) {
+                    brandText.innerHTML = '';
+                    brandText.appendChild(logoElement);
+                    brandText.appendChild(primaryText);
+                }
+            }
+        } else {
+            // Restaurar el contenido original en pantallas más grandes
+            if (brandText.hasAttribute('data-original')) {
+                brandText.innerHTML = brandText.getAttribute('data-original');
+                brandText.removeAttribute('data-original');
+            }
+        }
+    }
+    
+    // Verificar al cargar y al cambiar el tamaño de la ventana
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+});
+</script>
 {% endblock %}

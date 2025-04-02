@@ -140,8 +140,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = env("EMAIL_HOST")
 EMAIL_PORT = env.int("EMAIL_PORT")  # Convertir a entero
 EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS")  # Convertir a booleano
-EMAIL_HOST_USER = env("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = "senaproyecto362@gmail.com"  # Nueva cuenta de correo
+EMAIL_HOST_PASSWORD = "atbh iwdu rfyb tpew"  # Nueva contraseña de aplicación
 
 
 LOGIN_URL = 'login'

@@ -39,7 +39,7 @@ urlpatterns = [
     
     # URLs de recuperación de contraseña
     path('restablecer/', views.restablecer, name='restablecer'),
-    path('recuperar/<str:uidb64>/<str:token>/', views.recuperarc, name='recuperarc'),
+    path('cambiar_contraseña/<str:uidb64>/<str:token>/', views.recuperarc, name='recuperarc'),
     path('cambiada/', views.cambiada, name='cambiada'),
     
     # URLs de contacto

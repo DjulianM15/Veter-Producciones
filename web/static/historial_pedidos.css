@@ -1,5 +1,3 @@
-/* Historial de Pedidos CSS - Diseño Mejorado */
-
 /* Variables */
 :root {
     --primary-color: #5d82fbc0;
@@ -32,6 +30,8 @@ body {
     background-image: linear-gradient(135deg, #7663f1b9 0%, #7663f1b6 100%);
     background-attachment: fixed;
     min-height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 /* Contenedor principal */
@@ -41,6 +41,9 @@ body {
     box-shadow: var(--box-shadow);
     padding: 30px;
     position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 120px auto 50px;
 }
 
 /* Encabezado */
@@ -123,19 +126,21 @@ body {
     overflow: hidden;
     border: 1px solid var(--border-color);
     margin-bottom: 25px;
+    width: 100%;
 }
 
 .pedidos-table {
     margin-bottom: 0;
     width: 100%;
+    border-collapse: collapse;
 }
 
 .pedidos-thead {
-    background-color: var(--header-bg); /* Color más oscuro para encabezados */
+    background-color: var(--header-bg);
 }
 
 .pedidos-thead th {
-    color: #656565; /* Amarillo para mejor contraste */
+    color: #656565;
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.9rem;
@@ -148,7 +153,7 @@ body {
 
 .pedidos-thead th i {
     margin-right: 5px;
-    color: #274363; /* Amarillo para los iconos también */
+    color: #274363;
 }
 
 .pedidos-table tbody tr {
@@ -232,6 +237,10 @@ body {
     transition: var(--transition);
     text-decoration: none;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 }
 
 .pedido-btn-ver:hover {
@@ -246,6 +255,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    margin-bottom: 25px;
 }
 
 .summary-card {
@@ -272,6 +282,7 @@ body {
     color: white;
     font-size: 1.5rem;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
 }
 
 .summary-info {
@@ -396,10 +407,61 @@ body {
     transform: translateY(-2px);
 }
 
-/* Responsive */
-@media (max-width: 992px) {
+/* Animaciones */
+.btn-clicked {
+    transform: scale(0.95);
+}
+
+.row-hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    position: relative;
+}
+
+.btn-active {
+    transform: scale(0.95);
+}
+
+.pulse {
+    animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+    0% {
+        box-shadow: 0 0 0 0 rgba(93, 130, 251, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(93, 130, 251, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(93, 130, 251, 0);
+    }
+}
+
+.pulse-animation {
+    animation: pulse-scale 1s ease;
+}
+
+@keyframes pulse-scale {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* RESPONSIVE DESIGN - MEJORADO */
+
+/* Tablets y dispositivos medianos (768px - 991px) */
+@media (max-width: 991px) {
     .pedidos-container {
         padding: 20px 15px;
+        margin-top: 100px;
     }
     
     .pedidos-title {
@@ -407,18 +469,117 @@ body {
     }
     
     .summary-card {
-        min-width: 100%;
+        min-width: calc(50% - 20px);
+        flex: 0 0 calc(50% - 20px);
+    }
+    
+    .pedidos-filters {
+        padding: 12px 15px;
+    }
+    
+    .filter-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .pedidos-thead th {
+        padding: 12px 8px;
+    }
+    
+    .pedidos-table tbody td {
+        padding: 12px 8px;
     }
 }
 
-@media (max-width: 768px) {
+/* Dispositivos móviles grandes (576px - 767px) */
+@media (max-width: 767px) {
+    .pedidos-container {
+        padding: 15px 10px;
+        margin-top: 90px;
+    }
+    
+    .pedidos-title {
+        font-size: 1.6rem;
+    }
+    
     .pedidos-filters {
         flex-direction: column;
         align-items: flex-start;
+        gap: 10px;
     }
     
     .filter-buttons {
         width: 100%;
+        justify-content: space-between;
+    }
+    
+    .filter-btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+        flex: 1;
+        text-align: center;
+        min-width: 0;
+    }
+    
+    .filter-btn i {
+        margin-right: 4px;
+    }
+    
+    .summary-card {
+        min-width: 100%;
+        flex: 0 0 100%;
+    }
+    
+    /* Ocultar texto en botones y mostrar solo iconos */
+    .btn-text {
+        display: none;
+    }
+    
+    .pago-text {
+        display: none;
+    }
+    
+    .badge-text {
+        display: none;
+    }
+    
+    .pedido-badge {
+        min-width: 40px;
+        padding: 6px 8px;
+    }
+    
+    .pedido-badge i {
+        margin-right: 0;
+        font-size: 1rem;
+    }
+    
+    /* Ajustes para la fecha */
+    .fecha-completa {
+        display: none;
+    }
+    
+    .fecha-dia, .fecha-mes {
+        display: inline-block;
+    }
+    
+    .fecha-dia {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-right: 3px;
+    }
+    
+    .fecha-mes {
+        font-size: 0.9rem;
+    }
+    
+    /* Hacer la tabla scrollable horizontalmente */
+    .pedidos-table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .pedidos-table {
+        min-width: 650px;
     }
     
     .pedidos-thead th {
@@ -428,114 +589,196 @@ body {
     
     .pedidos-table tbody td {
         font-size: 0.85rem;
-        padding: 12px 5px;
+        padding: 10px 5px;
     }
     
-    .pedido-badge {
-        padding: 5px 10px;
-        font-size: 0.75rem;
-        min-width: 90px;
-    }
-    
+    /* Ajustar botones */
     .pedido-btn-ver {
-        padding: 5px 12px;
-        font-size: 0.75rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .pedidos-title {
-        font-size: 1.5rem;
+        padding: 6px 10px;
+        min-width: 36px;
     }
     
-    .pedidos-table {
-        min-width: 650px;
+    .pedido-btn-explorar {
+        padding: 8px 20px;
     }
 }
 
-    /* Estilos adicionales para animaciones */
-    .btn-clicked {
-        transform: scale(0.95);
+/* Dispositivos móviles pequeños (hasta 575px) */
+@media (max-width: 575px) {
+    .pedidos-container {
+        padding: 12px 8px;
+        margin-top: 80px;
+        border-radius: 6px;
+    }
+    
+    .pedidos-title {
+        font-size: 1.4rem;
+    }
+    
+    .pedidos-decoration {
+        width: 60px;
+        height: 3px;
+    }
+    
+    .filter-buttons {
+        gap: 5px;
+    }
+    
+    .filter-btn {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+        border-radius: 15px;
+    }
+    
+    .filter-btn i {
+        font-size: 0.9rem;
+    }
+    
+    .summary-card {
+        padding: 15px;
+        gap: 10px;
+    }
+    
+    .summary-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .summary-value {
+        font-size: 1.3rem;
+    }
+    
+    .summary-label {
+        font-size: 0.8rem;
+    }
+    
+    .pedidos-empty {
+        padding: 30px 15px;
+    }
+    
+    .empty-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+    
+    .pedidos-empty h3 {
+        font-size: 1.2rem;
+    }
+    
+    .pedidos-empty p {
+        font-size: 0.9rem;
+    }
+    
+    /* Ajustar tabla para móviles muy pequeños */
+    .pedidos-table {
+        min-width: 500px;
+    }
+    
+    .pedidos-thead th {
+        font-size: 0.7rem;
+        padding: 8px 4px;
+    }
+    
+    .pedidos-table tbody td {
+        font-size: 0.8rem;
+        padding: 8px 4px;
+    }
+    
+    .pedido-id {
+        font-size: 0.8rem;
+    }
+    
+    .monto {
+        font-size: 0.8rem;
+    }
+    
+    /* Indicador de scroll horizontal */
+    .pedidos-table-container::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color), transparent);
+        opacity: 0.7;
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
+        animation: scroll-indicator 2s infinite;
+    }
+    
+    @keyframes scroll-indicator {
+        0% { opacity: 0.3; }
+        50% { opacity: 0.7; }
+        100% { opacity: 0.3; }
+    }
+}
+
+/* Ajustes para pantallas grandes */
+@media (min-width: 1200px) {
+    .pedidos-container {
+        max-width: 1140px;
+    }
+    
+    .pedidos-title {
+        font-size: 2.2rem;
+    }
+    
+    .pedidos-table tbody td {
+        padding: 18px;
+    }
+    
+    .summary-card {
+        min-width: 250px;
+    }
+}
+
+/* Ajustes para pantallas extra grandes */
+@media (min-width: 1400px) {
+    .pedidos-container {
+        max-width: 1320px;
+    }
+}
+
+/* Ocultar elementos específicos en móvil/mostrar en desktop */
+@media (max-width: 768px) {
+    .fecha-completa {
+        display: none;
+    }
+    
+    .fecha-dia, .fecha-mes {
+        display: inline-block;
+    }
+}
+
+@media (min-width: 769px) {
+    .fecha-dia, .fecha-mes {
+        display: none;
+    }
+}
+
+/* Ajustes para modo oscuro del sistema */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-color: #e0e0e0;
+    }
+}
+
+/* Ajustes para usuarios que prefieren reducir el movimiento */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .pulse, .pulse-animation {
+        animation: none !important;
     }
     
     .row-hover {
-        transform: translateY(-3px) !important;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        z-index: 10;
-        position: relative;
+        transform: none !important;
     }
-    
-    .btn-active {
-        transform: scale(0.95);
-    }
-    
-    .pulse {
-        animation: pulse-animation 2s infinite;
-    }
-    
-    @keyframes pulse-animation {
-        0% {
-            box-shadow: 0 0 0 0 rgba(93, 130, 251, 0.7);
-        }
-        70% {
-            box-shadow: 0 0 0 15px rgba(93, 130, 251, 0);
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(93, 130, 251, 0);
-        }
-    }
-    
-    .pulse-animation {
-        animation: pulse-scale 1s ease;
-    }
-    
-    @keyframes pulse-scale {
-        0% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.1);
-        }
-        100% {
-            transform: scale(1);
-        }
-    }
-    
-    /* Mejoras para dispositivos móviles */
-    @media (max-width: 768px) {
-        .fecha-completa {
-            display: none;
-        }
-        
-        .fecha-dia, .fecha-mes {
-            display: inline-block;
-        }
-        
-        .fecha-dia {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-right: 5px;
-        }
-        
-        .btn-text {
-            display: none;
-        }
-        
-        .pago-text {
-            display: none;
-        }
-        
-        .badge-text {
-            display: none;
-        }
-        
-        .pedido-badge i {
-            margin-right: 0;
-        }
-    }
-    
-    @media (min-width: 769px) {
-        .fecha-dia, .fecha-mes {
-            display: none;
-        }
-    }
+}

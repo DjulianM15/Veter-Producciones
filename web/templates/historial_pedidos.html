@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% load static %}
 
 {% block title %}Historial de Pedidos - Veter Producciones{% endblock %}
@@ -6,6 +7,7 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'historial_pedidos.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <div class="container pedidos-container" style="margin-top: 120px; margin-bottom: 50px;">
     <div class="pedidos-header animate__animated animate__fadeInDown">
@@ -19,31 +21,31 @@
                 <i class="fas fa-filter"></i> Filtrar por:
             </div>
             <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">
-                    <i class="fas fa-list-ul"></i> Todos
+                <button class="filter-btn active" data-filter="all" aria-label="Mostrar todos los pedidos">
+                    <i class="fas fa-list-ul"></i> <span class="filter-text">Todos</span>
                 </button>
-                <button class="filter-btn" data-filter="pendiente">
-                    <i class="fas fa-clock"></i> Pendientes
+                <button class="filter-btn" data-filter="pendiente" aria-label="Mostrar pedidos pendientes">
+                    <i class="fas fa-clock"></i> <span class="filter-text">Pendientes</span>
                 </button>
-                <button class="filter-btn" data-filter="pagado">
-                    <i class="fas fa-check-circle"></i> Pagados
+                <button class="filter-btn" data-filter="pagado" aria-label="Mostrar pedidos pagados">
+                    <i class="fas fa-check-circle"></i> <span class="filter-text">Pagados</span>
                 </button>
-                <button class="filter-btn" data-filter="cancelado">
-                    <i class="fas fa-times-circle"></i> Cancelados
+                <button class="filter-btn" data-filter="cancelado" aria-label="Mostrar pedidos cancelados">
+                    <i class="fas fa-times-circle"></i> <span class="filter-text">Cancelados</span>
                 </button>
             </div>
         </div>
         
         <div class="table-responsive pedidos-table-container animate__animated animate__fadeInUp">
-            <table class="table table-hover pedidos-table">
+            <table class="table table-hover pedidos-table" aria-label="Historial de pedidos">
                 <thead class="pedidos-thead">
                     <tr>
-                        <th><i class="fas fa-hashtag"></i> Pedido</th>
-                        <th><i class="far fa-calendar-alt"></i> Fecha</th>
-                        <th><i class="fas fa-dollar-sign"></i> Total</th>
-                        <th><i class="fas fa-tag"></i> Estado</th>
-                        <th><i class="far fa-credit-card"></i> Pago</th>
-                        <th><i class="fas fa-search"></i> Detalles</th>
+                        <th scope="col"><i class="fas fa-hashtag"></i> <span class="column-title">Pedido</span></th>
+                        <th scope="col"><i class="far fa-calendar-alt"></i> <span class="column-title">Fecha</span></th>
+                        <th scope="col"><i class="fas fa-dollar-sign"></i> <span class="column-title">Total</span></th>
+                        <th scope="col"><i class="fas fa-tag"></i> <span class="column-title">Estado</span></th>
+                        <th scope="col"><i class="far fa-credit-card"></i> <span class="column-title">Pago</span></th>
+                        <th scope="col"><i class="fas fa-search"></i> <span class="column-title">Detalles</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,17 +56,20 @@
                         <td class="pedido-id">#{{ pedido.id }}</td>
                         <td class="pedido-fecha">
                             <span class="fecha-completa">{{ pedido.fecha_creacion|date:"d/m/Y H:i" }}</span>
-                            <span class="fecha-dia">{{ pedido.fecha_creacion|date:"d" }}</span>
-                            <span class="fecha-mes">{{ pedido.fecha_creacion|date:"M" }}</span>
+                            <div class="fecha-mobile">
+                                <span class="fecha-dia">{{ pedido.fecha_creacion|date:"d" }}</span>
+                                <span class="fecha-mes">{{ pedido.fecha_creacion|date:"M" }}</span>
+                            </div>
                         </td>
                         <td class="pedido-total">
                             <span class="monto">${{ pedido.total|floatformat:0 }}</span>
                         </td>
-                        <td>
+                        <td class="pedido-estado">
                             <span class="badge pedido-badge 
                                 {% if pedido.estado == 'cancelado' %}pedido-badge-cancelado
                                 {% elif pedido.estado == 'pagado' %}pedido-badge-pagado
-                                {% else %}pedido-badge-pendiente{% endif %}">
+                                {% else %}pedido-badge-pendiente{% endif %}"
+                                aria-label="Estado: {{ pedido.estado|title }}">
                                 <i class="fas 
                                     {% if pedido.estado == 'cancelado' %}fa-times-circle
                                     {% elif pedido.estado == 'pagado' %}fa-check-circle
@@ -82,8 +87,8 @@
                             </span>
                             <span class="pago-text">{{ pedido.metodo_pago }}</span>
                         </td>
-                        <td>
-                            <a href="{% url 'detalle_pedido' pedido.id %}" class="btn btn-sm pedido-btn-ver">
+                        <td class="pedido-acciones">
+                            <a href="{% url 'detalle_pedido' pedido.id %}" class="btn btn-sm pedido-btn-ver" aria-label="Ver detalles del pedido #{{ pedido.id }}">
                                 <i class="fas fa-eye"></i> <span class="btn-text">Ver</span>
                             </a>
                         </td>
@@ -278,94 +283,111 @@
                 }, 1000);
             }, 2000);
         }
+        
+        // Detectar si estamos en un dispositivo móvil para ajustes adicionales
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+        if (isMobile) {
+            // Ajustes específicos para móviles
+            document.querySelectorAll('.filter-text').forEach(text => {
+                if (window.matchMedia('(max-width: 575px)').matches) {
+                    text.style.display = 'none';
+                }
+            });
+            
+            // Añadir indicador de scroll para la tabla
+            const tableContainer = document.querySelector('.pedidos-table-container');
+            if (tableContainer && tableContainer.scrollWidth > tableContainer.clientWidth) {
+                tableContainer.classList.add('has-scroll');
+                
+                // Añadir indicador de swipe
+                const swipeIndicator = document.createElement('div');
+                swipeIndicator.className = 'swipe-indicator';
+                swipeIndicator.innerHTML = '<i class="fas fa-hand-point-right"></i> Desliza para ver más';
+                tableContainer.parentNode.insertBefore(swipeIndicator, tableContainer.nextSibling);
+                
+                // Ocultar el indicador después de que el usuario haga scroll
+                tableContainer.addEventListener('scroll', function() {
+                    swipeIndicator.style.opacity = '0';
+                    setTimeout(() => {
+                        swipeIndicator.style.display = 'none';
+                    }, 500);
+                }, { once: true });
+            }
+        }
     });
 </script>
 
 <style>
-    /* Estilos adicionales para animaciones */
-    .btn-clicked {
-        transform: scale(0.95);
-    }
-    
-    .row-hover {
-        transform: translateY(-3px) !important;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        z-index: 10;
-        position: relative;
-    }
-    
-    .btn-active {
-        transform: scale(0.95);
-    }
-    
-    .pulse {
-        animation: pulse-animation 2s infinite;
-    }
-    
-    @keyframes pulse-animation {
-        0% {
-            box-shadow: 0 0 0 0 rgba(93, 130, 251, 0.7);
-        }
-        70% {
-            box-shadow: 0 0 0 15px rgba(93, 130, 251, 0);
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(93, 130, 251, 0);
-        }
-    }
-    
-    .pulse-animation {
-        animation: pulse-scale 1s ease;
-    }
-    
-    @keyframes pulse-scale {
-        0% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.1);
-        }
-        100% {
-            transform: scale(1);
-        }
-    }
-    
-    /* Mejoras para dispositivos móviles */
-    @media (max-width: 768px) {
-        .fecha-completa {
+    /* Estilos adicionales para mejorar la responsividad */
+    @media (max-width: 575px) {
+        .filter-text {
             display: none;
         }
         
-        .fecha-dia, .fecha-mes {
-            display: inline-block;
+        .column-title {
+            display: none;
         }
         
-        .fecha-dia {
-            font-size: 1.2rem;
-            font-weight: bold;
+        .swipe-indicator {
+            text-align: center;
+            padding: 8px;
+            background-color: rgba(93, 130, 251, 0.1);
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--text-color);
+            transition: opacity 0.5s ease;
+        }
+        
+        .swipe-indicator i {
+            animation: swipe-right 1.5s infinite;
+            display: inline-block;
             margin-right: 5px;
         }
         
-        .btn-text {
-            display: none;
+        @keyframes swipe-right {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+            100% { transform: translateX(0); }
         }
         
-        .pago-text {
-            display: none;
+        .fecha-mobile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
-        .badge-text {
-            display: none;
+        .fecha-dia {
+            font-size: 1.1rem;
+            line-height: 1;
         }
         
-        .pedido-badge i {
-            margin-right: 0;
+        .fecha-mes {
+            font-size: 0.8rem;
+            text-transform: uppercase;
         }
     }
     
-    @media (min-width: 769px) {
-        .fecha-dia, .fecha-mes {
-            display: none;
+    /* Mejoras de accesibilidad */
+    .pedido-badge {
+        position: relative;
+    }
+    
+    .pedido-badge:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+    }
+    
+    .filter-btn:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+    }
+    
+    /* Mejoras para pantallas táctiles */
+    @media (hover: none) {
+        .pedido-btn-ver, .pedido-btn-explorar, .filter-btn {
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
     }
 </style>
